@@ -1,0 +1,3096 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#070B16" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>ZenF Agenda · ZenF Systems — Brasil Sul</title>
+
+  <!-- 1. GUARDIÃO GLOBAL ANTI-TELA-BRANCA (EXECUTA ANTES DE QUALQUER SCRIPT) -->
+  <script>
+    (function () {
+      window.__ZENF_BOOT_OK = false;
+      window.__ZENF_ERRORS = [];
+
+      function showRecoveryBanner(msg) {
+        try {
+          if (document.getElementById('zenf-recovery-bar')) return;
+          var bar = document.createElement('div');
+          bar.id = 'zenf-recovery-bar';
+          bar.setAttribute('role', 'status');
+          bar.style.cssText = [
+            'position:fixed',
+            'bottom:12px',
+            'left:12px',
+            'right:12px',
+            'z-index:99999',
+            'background:#1e1b4b',
+            'color:#f8fafc',
+            'border:1px solid #6366f1',
+            'border-radius:14px',
+            'padding:11px 14px',
+            'font-family:system-ui,-apple-system,sans-serif',
+            'font-size:12px',
+            'box-shadow:0 12px 30px rgba(0,0,0,0.75)',
+            'display:flex',
+            'align-items:center',
+            'justify-content:space-between',
+            'gap:10px'
+          ].join(';');
+
+          var text = document.createElement('span');
+          text.textContent = 'Aviso técnico isolado: ' + String(msg || 'Falha recuperada').slice(0, 95);
+
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.textContent = 'Recuperar Tela';
+          btn.style.cssText = [
+            'background:#3b82f6',
+            'color:#fff',
+            'border:none',
+            'border-radius:10px',
+            'padding:7px 11px',
+            'font-weight:700',
+            'font-size:11px',
+            'flex-shrink:0',
+            'cursor:pointer'
+          ].join(';');
+
+          btn.onclick = function () {
+            try {
+              var ls = document.getElementById('login-screen');
+              var sh = document.getElementById('app-shell');
+              if (ls && sh) {
+                ls.classList.add('is-hidden');
+                ls.setAttribute('hidden', 'hidden');
+                ls.style.display = 'none';
+                sh.classList.remove('is-hidden');
+                sh.removeAttribute('hidden');
+                sh.style.display = 'flex';
+              }
+              bar.remove();
+            } catch (e) {}
+          };
+
+          bar.appendChild(text);
+          bar.appendChild(btn);
+          if (document.body) {
+            document.body.appendChild(bar);
+          }
+        } catch (e) {}
+      }
+
+      window.onerror = function (message, source, lineno, colno, error) {
+        try {
+          window.__ZENF_ERRORS.push({ message: String(message || ''), lineno: lineno || 0 });
+          console.error('[ZenF Guard Error]', message, lineno, error);
+          if (!window.__ZENF_BOOT_OK) {
+            showRecoveryBanner(message);
+          }
+        } catch (e) {}
+        return true;
+      };
+
+      window.onunhandledrejection = function (event) {
+        try {
+          var reason = event && event.reason ? (event.reason.message || String(event.reason)) : 'Erro assíncrono';
+          window.__ZENF_ERRORS.push({ message: reason });
+          console.warn('[ZenF Guard Rejection]', reason);
+          if (event && typeof event.preventDefault === 'function') {
+            event.preventDefault();
+          }
+        } catch (e) {}
+      };
+    })();
+  </script>
+
+  <!-- 2. ESTILOS 100% AUTOCONTIDOS (SEM DEPENDÊNCIA DE CDN EXTERNO) -->
+  <style>
+    :root {
+      --bg-base: #070B16;
+      --bg-panel: #0E1629;
+      --bg-card: #101A30;
+      --bg-input: #090F1D;
+      --border-subtle: rgba(56, 189, 248, 0.16);
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+      background-color: var(--bg-base);
+      background-image:
+        radial-gradient(circle at 18% 10%, rgba(56, 189, 248, 0.12) 0%, transparent 42%),
+        radial-gradient(circle at 85% 18%, rgba(139, 92, 246, 0.14) 0%, transparent 45%),
+        linear-gradient(180deg, #070B16 0%, #090F20 100%);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, sans-serif;
+    }
+
+    .is-hidden, .hidden {
+      display: none !important;
+    }
+
+    #login-screen {
+      min-height: 100dvh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    #app-shell {
+      min-height: 100dvh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: calc(84px + var(--safe-bottom));
+    }
+
+    .zenf-gradient {
+      background: linear-gradient(135deg, #2563EB 0%, #4F46E5 52%, #7C3AED 100%);
+    }
+
+    .zenf-gradient:hover {
+      background: linear-gradient(135deg, #1D4ED8 0%, #4338CA 52%, #6D28D9 100%);
+    }
+
+    .card-panel {
+      background: linear-gradient(180deg, rgba(16, 26, 48, 0.96) 0%, rgba(11, 18, 36, 0.99) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.16);
+      border-radius: 20px;
+      box-shadow: 0 14px 32px -14px rgba(0, 0, 0, 0.8);
+    }
+
+    .zenf-input, .zenf-select, .zenf-textarea {
+      width: 100%;
+      background-color: var(--bg-input);
+      border: 1px solid rgba(71, 85, 105, 0.78);
+      color: var(--text-main);
+      border-radius: 12px;
+      padding: 11px 13px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .zenf-input:focus, .zenf-select:focus, .zenf-textarea:focus {
+      border-color: #38BDF8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.16);
+    }
+
+    .bottom-nav-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      background: rgba(8, 13, 27, 0.96);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(56, 189, 248, 0.16);
+      padding: 6px 6px calc(8px + var(--safe-bottom)) 6px;
+    }
+
+    .tab-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 7px 4px;
+      border-radius: 14px;
+      color: var(--text-muted);
+      font-size: 10.5px;
+      font-weight: 600;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .tab-btn.active {
+      color: var(--text-main);
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.28), rgba(124, 58, 237, 0.28));
+      border-color: rgba(96, 165, 250, 0.38);
+    }
+
+    @keyframes pulseRing {
+      0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.55); }
+      70% { box-shadow: 0 0 0 12px rgba(56, 189, 248, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+    }
+
+    .voice-listening {
+      animation: pulseRing 1.4s infinite;
+      border-color: #38BDF8 !important;
+    }
+
+    .zf-emblem-wrap {
+      position: relative;
+      width: 82px;
+      height: 82px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(30, 27, 75, 0.92));
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      box-shadow:
+        0 16px 36px -10px rgba(37, 99, 235, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px auto;
+    }
+
+    .zf-brand-title {
+      font-size: 27px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      background: linear-gradient(135deg, #FFFFFF 0%, #E0F2FE 55%, #C4B5FD 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+    }
+
+    .zf-brand-subtitle {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #7DD3FC;
+      margin: 6px 0 0 0;
+    }
+
+    .zf-portal-heading {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      color: #F8FAFC;
+      margin: 16px 0 0 0;
+    }
+
+    .zf-portal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #CBD5E1;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(99, 102, 241, 0.32);
+    }
+
+    /* Utilitários responsivos essenciais sem dependência de CDN */
+    .max-w-4xl { max-width: 56rem; }
+    .max-w-lg { max-width: 32rem; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+    .flex { display: flex; }
+    .flex-1 { flex: 1 1 0%; }
+    .flex-col { flex-direction: column; }
+    .flex-wrap { flex-wrap: wrap; }
+    .items-center { align-items: center; }
+    .items-start { align-items: flex-start; }
+    .items-end { align-items: flex-end; }
+    .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
+    .justify-end { justify-content: flex-end; }
+    .gap-1 { gap: 0.25rem; }
+    .gap-1\.5 { gap: 0.375rem; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-2\.5 { gap: 0.625rem; }
+    .gap-3 { gap: 0.75rem; }
+    .space-y-2 > * + * { margin-top: 0.5rem; }
+    .space-y-2\.5 > * + * { margin-top: 0.625rem; }
+    .space-y-3 > * + * { margin-top: 0.75rem; }
+    .space-y-4 > * + * { margin-top: 1rem; }
+    .grid { display: grid; }
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .grid-cols-7 { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+    .w-full { width: 100%; }
+    .w-auto { width: auto; }
+    .w-2\.5 { width: 0.625rem; }
+    .h-2\.5 { height: 0.625rem; }
+    .w-4 { width: 1rem; }
+    .h-4 { height: 1rem; }
+    .w-5 { width: 1.25rem; }
+    .h-5 { height: 1.25rem; }
+    .w-8 { width: 2rem; }
+    .h-7 { height: 1.75rem; }
+    .min-w-0 { min-width: 0; }
+    .min-w-\[155px\] { min-width: 155px; }
+    .shrink-0 { flex-shrink: 0; }
+    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .text-center { text-align: center; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .font-bold { font-weight: 700; }
+    .font-extrabold { font-weight: 800; }
+    .text-\[9px\] { font-size: 9px; }
+    .text-\[10px\] { font-size: 10px; }
+    .text-\[11px\] { font-size: 11px; }
+    .text-xs { font-size: 12px; line-height: 1.35; }
+    .text-sm { font-size: 14px; line-height: 1.4; }
+    .text-base { font-size: 16px; line-height: 1.4; }
+    .text-lg { font-size: 18px; line-height: 1.35; }
+    .text-xl { font-size: 20px; line-height: 1.3; }
+    .uppercase { text-transform: uppercase; }
+    .tracking-wide { letter-spacing: 0.025em; }
+    .tracking-wider { letter-spacing: 0.05em; }
+    .line-through { text-decoration: line-through; }
+    .opacity-60 { opacity: 0.6; }
+    .opacity-80 { opacity: 0.8; }
+    .leading-none { line-height: 1; }
+    .cursor-pointer { cursor: pointer; }
+    .sticky { position: sticky; }
+    .fixed { position: fixed; }
+    .top-0 { top: 0; }
+    .top-16 { top: 4rem; }
+    .left-3 { left: 0.75rem; }
+    .right-3 { right: 0.75rem; }
+    .z-30 { z-index: 30; }
+    .z-50 { z-index: 50; }
+    .p-2 { padding: 0.5rem; }
+    .p-2\.5 { padding: 0.625rem; }
+    .p-3 { padding: 0.75rem; }
+    .p-3\.5 { padding: 0.875rem; }
+    .p-4 { padding: 1rem; }
+    .px-1\.5 { padding-left: 0.375rem; padding-right: 0.375rem; }
+    .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+    .px-2\.5 { padding-left: 0.625rem; padding-right: 0.625rem; }
+    .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .px-3\.5 { padding-left: 0.875rem; padding-right: 0.875rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .py-0\.5 { padding-top: 0.125rem; padding-bottom: 0.125rem; }
+    .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+    .py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
+    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    .pt-1 { padding-top: 0.25rem; }
+    .pt-4 { padding-top: 1rem; }
+    .pb-6 { padding-bottom: 1.5rem; }
+    .mb-1 { margin-bottom: 0.25rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-2\.5 { margin-bottom: 0.625rem; }
+    .mb-3 { margin-bottom: 0.75rem; }
+    .mt-0\.5 { margin-top: 0.125rem; }
+    .mt-1 { margin-top: 0.25rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-3\.5 { margin-top: 0.875rem; }
+    .mt-4 { margin-top: 1rem; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .rounded-xl { border-radius: 0.75rem; }
+    .rounded-2xl { border-radius: 1rem; }
+    .rounded-full { border-radius: 9999px; }
+    .border { border: 1px solid rgba(51, 65, 85, 0.75); }
+    .border-b { border-bottom: 1px solid rgba(56, 189, 248, 0.15); }
+    .border-sky-400\/30 { border-color: rgba(56, 189, 248, 0.3); }
+    .border-sky-400\/40 { border-color: rgba(56, 189, 248, 0.4); }
+    .border-sky-500\/25 { border-color: rgba(14, 165, 233, 0.25); }
+    .border-sky-500\/30 { border-color: rgba(14, 165, 233, 0.3); }
+    .border-sky-500\/35 { border-color: rgba(14, 165, 233, 0.35); }
+    .border-sky-500\/40 { border-color: rgba(14, 165, 233, 0.4); }
+    .border-purple-500\/25 { border-color: rgba(168, 85, 247, 0.25); }
+    .border-purple-500\/35 { border-color: rgba(168, 85, 247, 0.35); }
+    .border-indigo-500\/30 { border-color: rgba(99, 102, 241, 0.3); }
+    .border-indigo-400\/30 { border-color: rgba(129, 140, 248, 0.3); }
+    .border-emerald-500\/30 { border-color: rgba(16, 185, 129, 0.3); }
+    .border-amber-400\/30 { border-color: rgba(251, 191, 36, 0.3); }
+    .border-amber-500\/35 { border-color: rgba(245, 158, 11, 0.35); }
+    .border-amber-500\/45 { border-color: rgba(245, 158, 11, 0.45); }
+    .border-rose-500\/30 { border-color: rgba(244, 63, 94, 0.3); }
+    .border-slate-700 { border-color: #334155; }
+    .border-slate-700\/80 { border-color: rgba(51, 65, 85, 0.8); }
+    .border-slate-800 { border-color: #1e293b; }
+    .bg-\[\#080D1B\]\/95 { background-color: rgba(8, 13, 27, 0.95); }
+    .bg-\[\#0A1122\] { background-color: #0A1122; }
+    .bg-\[\#0F172A\] { background-color: #0F172A; }
+    .bg-slate-800 { background-color: #1e293b; }
+    .bg-slate-800\/90 { background-color: rgba(30, 41, 59, 0.9); }
+    .bg-sky-500\/15 { background-color: rgba(14, 165, 233, 0.15); }
+    .bg-sky-500\/20 { background-color: rgba(14, 165, 233, 0.2); }
+    .bg-sky-950\/35 { background-color: rgba(8, 47, 73, 0.35); }
+    .bg-sky-950\/40 { background-color: rgba(8, 47, 73, 0.4); }
+    .bg-sky-950\/50 { background-color: rgba(8, 47, 73, 0.5); }
+    .bg-purple-500\/20 { background-color: rgba(168, 85, 247, 0.2); }
+    .bg-purple-950\/50 { background-color: rgba(59, 7, 100, 0.5); }
+    .bg-indigo-600 { background-color: #4f46e5; }
+    .bg-indigo-500\/15 { background-color: rgba(99, 102, 241, 0.15); }
+    .bg-indigo-500\/20 { background-color: rgba(99, 102, 241, 0.2); }
+    .bg-indigo-600\/25 { background-color: rgba(79, 70, 229, 0.25); }
+    .bg-sky-600\/25 { background-color: rgba(2, 132, 199, 0.25); }
+    .bg-emerald-500\/15 { background-color: rgba(16, 185, 129, 0.15); }
+    .bg-emerald-500\/20 { background-color: rgba(16, 185, 129, 0.2); }
+    .bg-amber-400 { background-color: #fbbf24; }
+    .bg-amber-500\/20 { background-color: rgba(245, 158, 11, 0.2); }
+    .bg-amber-500\/25 { background-color: rgba(245, 158, 11, 0.25); }
+    .bg-amber-950\/30 { background-color: rgba(69, 26, 3, 0.3); }
+    .bg-amber-950\/35 { background-color: rgba(69, 26, 3, 0.35); }
+    .bg-rose-950\/50 { background-color: rgba(76, 5, 25, 0.5); }
+    .bg-rose-950\/60 { background-color: rgba(76, 5, 25, 0.6); }
+    .text-white { color: #ffffff; }
+    .text-slate-100 { color: #f1f5f9; }
+    .text-slate-200 { color: #e2e8f0; }
+    .text-slate-300 { color: #cbd5e1; }
+    .text-slate-400 { color: #94a3b8; }
+    .text-sky-200 { color: #bae6fd; }
+    .text-sky-300 { color: #7dd3fc; }
+    .text-sky-400 { color: #38bdf8; }
+    .text-purple-200 { color: #e9d5ff; }
+    .text-purple-300 { color: #d8b4fe; }
+    .text-indigo-200 { color: #c7d2fe; }
+    .text-indigo-300 { color: #a5b4fc; }
+    .text-indigo-400 { color: #818cf8; }
+    .text-emerald-300 { color: #6ee7b7; }
+    .text-amber-300 { color: #fcd34d; }
+    .text-amber-400 { color: #fbbf24; }
+    .text-rose-300 { color: #fda4af; }
+    .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.35); }
+    .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.45); }
+    .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75); }
+    .backdrop-blur-md { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .accent-sky-400 { accent-color: #38bdf8; }
+    .accent-sky-500 { accent-color: #0ea5e9; }
+
+    @media (min-width: 640px) {
+      .sm\:inline { display: inline; }
+      .sm\:flex-row { flex-direction: row; }
+      .sm\:flex-none { flex: none; }
+      .sm\:items-center { align-items: center; }
+      .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sm\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .sm\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .sm\:col-span-2 { grid-column: span 2 / span 2; }
+      .sm\:w-auto { width: auto; }
+      .sm\:p-5 { padding: 1.25rem; }
+      .sm\:px-3\.5 { padding-left: 0.875rem; padding-right: 0.875rem; }
+      .sm\:text-base { font-size: 16px; }
+      .sm\:text-sm { font-size: 14px; }
+      .sm\:text-xl { font-size: 20px; }
+    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #070B16; }
+    ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 99px; }
+  </style>
+</head>
+<body>
+
+  <!-- ===================================================================== -->
+  <!-- 1. TELA DE LOGIN (ZENF SYSTEMS - BRASIL SUL · ÁREA DO SUPERVISOR)     -->
+  <!-- ===================================================================== -->
+  <section id="login-screen" aria-label="Tela de Acesso ZenF Agenda">
+    <div style="width:100%;max-width:420px;border-radius:28px;padding:28px 24px;background:linear-gradient(180deg,rgba(14,22,41,0.97) 0%,rgba(9,14,28,0.99) 100%);border:1px solid rgba(56,189,248,0.22);box-shadow:0 24px 60px -15px rgba(0,0,0,0.85);">
+      <!-- Identidade Visual Corporativa ZenF Systems -->
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:22px;">
+        <div class="zf-emblem-wrap" aria-hidden="true">
+          <svg width="64" height="64" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="zfShieldStroke" x1="8" y1="6" x2="64" y2="66" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#38BDF8" />
+                <stop offset="50%" stop-color="#6366F1" />
+                <stop offset="100%" stop-color="#A855F7" />
+              </linearGradient>
+              <linearGradient id="zfMonoFill" x1="16" y1="20" x2="56" y2="52" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#F8FAFC" />
+                <stop offset="55%" stop-color="#7DD3FC" />
+                <stop offset="100%" stop-color="#C084FC" />
+              </linearGradient>
+              <radialGradient id="zfCoreGlow" cx="50%" cy="40%" r="55%">
+                <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.24" />
+                <stop offset="100%" stop-color="#0F172A" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <path d="M36 5L61 19.5V48.5L36 63L11 48.5V19.5L36 5Z" fill="url(#zfCoreGlow)" stroke="url(#zfShieldStroke)" stroke-width="2.2" />
+            <path d="M36 10.5L56 22V46L36 57.5L16 46V22L36 10.5Z" stroke="rgba(148,163,184,0.22)" stroke-width="1" stroke-dasharray="3 2" />
+            <path d="M20 25H36.5L25.5 40.5H36.5V46.5H18.5L29.5 31H20V25Z" fill="url(#zfMonoFill)" />
+            <path d="M40 25H54V30.8H46V34.2H52.5V39.8H46V46.5H40V25Z" fill="url(#zfMonoFill)" />
+            <circle cx="36" cy="14" r="1.8" fill="#38BDF8" />
+          </svg>
+        </div>
+
+        <h1 class="zf-brand-title">ZenF Systems</h1>
+        <p class="zf-brand-subtitle">TECNOLOGIA QUE TRANSFORMA IDEIAS EM SOLUÇÕES</p>
+
+        <h2 class="zf-portal-heading">Acesso ao ZenF Agenda</h2>
+        <span class="zf-portal-badge">
+          <span style="width:7px;height:7px;border-radius:50%;background:#38BDF8;display:inline-block;"></span>
+          <span>Brasil Sul · Área do supervisor</span>
+        </span>
+      </div>
+
+      <!-- Formulário de Login (Sem exibição de senha demo na interface) -->
+      <form id="login-form" style="display:flex;flex-direction:column;gap:14px;" novalidate>
+        <div>
+          <label for="login-user" style="display:block;font-size:12px;font-weight:600;color:#CBD5E1;margin-bottom:6px;">Usuário</label>
+          <input
+            id="login-user"
+            type="text"
+            value="roberto"
+            autocomplete="username"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
+            placeholder="roberto"
+            class="zenf-input"
+            style="font-weight:600;"
+          />
+        </div>
+
+        <div>
+          <label for="login-pass" style="display:block;font-size:12px;font-weight:600;color:#CBD5E1;margin-bottom:6px;">Senha provisória</label>
+          <div style="position:relative;">
+            <input
+              id="login-pass"
+              type="password"
+              value=""
+              autocomplete="current-password"
+              placeholder="Digite sua senha provisória de teste"
+              class="zenf-input"
+              style="padding-right:44px;border-color:rgba(99,102,241,0.55);"
+            />
+            <button
+              type="button"
+              id="toggle-pass-btn"
+              aria-label="Mostrar ou ocultar senha"
+              style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;padding:8px;color:#94A3B8;cursor:pointer;"
+            >
+              <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <p id="login-error" class="is-hidden" style="font-size:12px;color:#FDA4AF;background:rgba(136,19,55,0.45);border:1px solid rgba(244,63,94,0.4);border-radius:12px;padding:8px 12px;text-align:center;margin:0;"></p>
+
+        <button
+          id="login-submit-btn"
+          type="submit"
+          class="zenf-gradient"
+          style="width:100%;padding:14px 20px;border-radius:999px;border:none;color:#FFFFFF;font-weight:700;font-size:14px;box-shadow:0 12px 26px -6px rgba(37,99,235,0.55);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;"
+        >
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+          <span>Entrar com segurança</span>
+        </button>
+      </form>
+
+      <!-- Rodapé Informativo -->
+      <div style="margin-top:20px;padding-top:14px;border-top:1px solid rgba(51,65,85,0.65);text-align:center;">
+        <p style="font-size:11.5px;color:#CBD5E1;font-weight:600;margin:0 0 4px 0;">Acesso de demonstração individual para Roberto.</p>
+        <p style="font-size:10px;line-height:1.5;color:#94A3B8;margin:0;">
+          Demonstração: autenticação local neste arquivo. Para uso real, será necessário backend seguro, armazenamento protegido de senhas e controle de sessão no servidor.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- 2. APLICATIVO PRINCIPAL (APÓS LOGIN)                                  -->
+  <!-- ===================================================================== -->
+  <div id="app-shell" class="is-hidden" hidden>
+    <!-- Cabeçalho Fixo Superior -->
+    <header class="sticky top-0 z-30 bg-[#080D1B]/95 backdrop-blur-md border-b border-sky-500/15 px-3.5 py-2.5">
+      <div class="max-w-4xl mx-auto flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <svg class="w-8 h-7 shrink-0" viewBox="0 0 64 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 8H32L14 32H32V40H4L22 16H6V8Z" fill="#38BDF8" />
+            <path d="M36 8H60V16H44V22H57V30H44V44H36V8Z" fill="#8B5CF6" />
+          </svg>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="font-extrabold text-sm sm:text-base text-white truncate">ZenF Agenda</span>
+              <span id="header-parity-pill" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold tracking-wide bg-sky-500/20 text-sky-300 border border-sky-400/30">
+                ÍMPAR
+              </span>
+            </div>
+            <p id="header-date-clock" class="text-[11px] text-slate-400 truncate">Brasil Sul · Carregando data...</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button
+            type="button"
+            id="header-voice-btn"
+            class="px-3 py-2 rounded-xl zenf-gradient text-white text-xs font-semibold flex items-center gap-1.5 shadow-md cursor-pointer"
+            title="Falar com ZenF IA"
+          >
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+            </svg>
+            <span class="hidden sm:inline">ZenF IA</span>
+          </button>
+
+          <button
+            type="button"
+            id="logout-btn"
+            class="px-2.5 py-2 rounded-xl bg-slate-800/90 text-slate-300 text-xs font-medium border border-slate-700/80 cursor-pointer"
+            title="Sair"
+          >
+            Sair
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Toast / Barra de Feedback Flutuante -->
+    <div id="toast-banner" class="is-hidden fixed top-16 left-3 right-3 max-w-lg mx-auto z-50 rounded-2xl bg-[#0F172A] border border-sky-400/40 px-4 py-3 shadow-2xl text-xs text-slate-100 flex items-center justify-between gap-3">
+      <span id="toast-message" class="leading-snug"></span>
+      <button type="button" id="toast-close-btn" class="text-slate-400 font-bold px-1.5 cursor-pointer" aria-label="Fechar aviso">✕</button>
+    </div>
+
+    <!-- Conteúdo Principal das Abas -->
+    <main class="flex-1 w-full max-w-4xl mx-auto px-3.5 pt-4 pb-6 space-y-4">
+
+      <!-- =================================================================== -->
+      <!-- ABA 1: VISÃO GERAL (INÍCIO)                                         -->
+      <!-- =================================================================== -->
+      <section id="tab-overview" class="tab-panel space-y-4">
+        <div class="card-panel p-4 sm:p-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <span class="text-[11px] font-semibold uppercase tracking-wider text-sky-400">Supervisor Roberto · Brasil Sul</span>
+              <h2 class="text-lg sm:text-xl font-bold text-white mt-0.5">Painel Operacional & ZenF IA</h2>
+              <p id="zenf-status-line" class="text-xs text-slate-300 mt-1">
+                ZenF IA pronta com voz feminina cordial e profissional. Toque em falar ou digite um comando.
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                id="overview-speak-btn"
+                class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl zenf-gradient text-white text-xs font-bold flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+                </svg>
+                <span>Falar com ZenF</span>
+              </button>
+              <button
+                type="button"
+                id="overview-briefing-btn"
+                class="px-3.5 py-2.5 rounded-xl bg-slate-800/90 text-sky-300 text-xs font-semibold border border-sky-500/25 cursor-pointer"
+              >
+                Ouvir Resumo
+              </button>
+            </div>
+          </div>
+
+          <!-- Comando Rápido por Texto -->
+          <form id="quick-command-form" class="mt-3.5 flex gap-2">
+            <input
+              id="quick-command-input"
+              type="text"
+              placeholder="Ex: Agendar ronda posto central às 22:00, abrir férias ou reciclagem..."
+              class="zenf-input text-xs py-2.5"
+            />
+            <button type="submit" class="px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-semibold shrink-0 cursor-pointer">
+              Enviar
+            </button>
+          </form>
+        </div>
+
+        <!-- KPIs em Tempo Real -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="card-panel p-3.5">
+            <span class="text-[11px] text-slate-400 font-medium">Escala do Dia (1–31)</span>
+            <div id="kpi-parity-value" class="text-xl font-extrabold text-sky-400 mt-1">ÍMPAR</div>
+            <p id="kpi-parity-sub" class="text-[11px] text-slate-400 mt-0.5">Dia 21 · Turno Ímpar</p>
+          </div>
+
+          <div class="card-panel p-3.5">
+            <span class="text-[11px] text-slate-400 font-medium">Postos / Fixos</span>
+            <div id="kpi-postos-value" class="text-xl font-extrabold text-white mt-1">0 / 0</div>
+            <p class="text-[11px] text-slate-400 mt-0.5">Postos e vigilantes</p>
+          </div>
+
+          <div class="card-panel p-3.5">
+            <span class="text-[11px] text-slate-400 font-medium">Horistas (D / N)</span>
+            <div id="kpi-horistas-value" class="text-xl font-extrabold text-indigo-400 mt-1">0</div>
+            <p id="kpi-horistas-sub" class="text-[11px] text-slate-400 mt-0.5">0 Diurno · 0 Noturno</p>
+          </div>
+
+          <div class="card-panel p-3.5">
+            <span class="text-[11px] text-slate-400 font-medium">Férias & Reciclagem</span>
+            <div id="kpi-ferias-value" class="text-xl font-extrabold text-amber-400 mt-1">0 / 0</div>
+            <p id="kpi-ferias-sub" class="text-[11px] text-slate-400 mt-0.5">0 avisos ≤10 dias</p>
+          </div>
+        </div>
+
+        <!-- Banner de Alertas Críticos (10 dias de Férias e Reciclagens) -->
+        <div class="card-panel p-4">
+          <div class="flex items-center justify-between gap-2 mb-2.5">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span>
+              <span>Avisos Automáticos (10 Dias Férias & Reciclagens)</span>
+            </h3>
+            <button type="button" id="overview-test-alert-btn" class="text-[11px] font-semibold text-sky-400 cursor-pointer">
+              Testar Som
+            </button>
+          </div>
+          <div id="overview-alerts-list" class="space-y-2 text-xs"></div>
+        </div>
+
+        <!-- Próximas Atividades da Agenda -->
+        <div class="card-panel p-4">
+          <div class="flex items-center justify-between gap-2 mb-2.5">
+            <h3 class="text-sm font-bold text-white">Próximas Atividades Programadas</h3>
+            <button type="button" data-goto-tab="agenda" class="text-[11px] font-semibold text-indigo-400 cursor-pointer">
+              + Nova Tarefa
+            </button>
+          </div>
+          <div id="overview-tasks-list" class="space-y-2 text-xs"></div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- ABA 2: ESCALA ÍMPAR / PAR (AUTOMÁTICA CALENDÁRIO 1 A 31)            -->
+      <!-- =================================================================== -->
+      <section id="tab-escala" class="tab-panel is-hidden space-y-4">
+        <div class="card-panel p-4 sm:p-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <span class="text-[11px] font-semibold text-sky-400 uppercase tracking-wider">Automação Calendário 1 a 31</span>
+              <h2 class="text-lg font-bold text-white mt-0.5">Alternância Automática ÍMPAR / PAR</h2>
+              <p class="text-xs text-slate-400 mt-1">
+                Dias ímpares (1, 3, 5... 31) ativam a <strong class="text-sky-300">ESCALA ÍMPAR</strong>. Dias pares (2, 4, 6... 30) ativam a <strong class="text-purple-300">ESCALA PAR</strong>.
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <select id="day-simulator-select" aria-label="Simular dia do mês" class="zenf-select text-xs py-2 w-auto min-w-[155px]"></select>
+              <button type="button" id="reset-real-day-btn" class="px-3 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-200 border border-slate-700 cursor-pointer">
+                Hoje
+              </button>
+            </div>
+          </div>
+
+          <div id="escala-active-banner" class="mt-4 rounded-2xl p-4 bg-sky-950/40 border border-sky-500/30 flex items-center justify-between gap-3">
+            <div>
+              <div class="text-[11px] text-sky-300 font-semibold uppercase">Plantão Ativo no Calendário</div>
+              <div id="escala-banner-title" class="text-lg font-extrabold text-white mt-0.5">ESCALA ÍMPAR · DIA 21</div>
+              <p id="escala-banner-desc" class="text-xs text-slate-300 mt-0.5">Alternância automática sincronizada com o calendário mensal.</p>
+            </div>
+            <span id="escala-banner-badge" class="px-3.5 py-2 rounded-xl zenf-gradient text-white font-extrabold text-xs shrink-0">
+              ÍMPAR
+            </span>
+          </div>
+
+          <div class="mt-4">
+            <div class="flex items-center justify-between text-[11px] text-slate-400 mb-2">
+              <span>Toque em qualquer dia (1 a 31) para simular a escala:</span>
+              <span><span class="text-sky-400 font-bold">Azul: Ímpar</span> · <span class="text-purple-400 font-bold">Roxo: Par</span></span>
+            </div>
+            <div id="calendar-31-grid" class="grid grid-cols-7 gap-1.5"></div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="card-panel p-4 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-sky-300">Efetivo · ESCALA ÍMPAR (Dias 1,3,5...31)</h3>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300">Editável</span>
+            </div>
+            <textarea id="roster-impar-text" rows="5" class="zenf-textarea text-xs" placeholder="Liste os vigilantes e postos da escala ímpar..."></textarea>
+            <button type="button" id="save-rosters-btn" class="w-full py-2.5 rounded-xl zenf-gradient text-white text-xs font-semibold cursor-pointer">
+              Salvar Escalas Ímpar e Par
+            </button>
+          </div>
+
+          <div class="card-panel p-4 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-purple-300">Efetivo · ESCALA PAR (Dias 2,4,6...30)</h3>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300">Editável</span>
+            </div>
+            <textarea id="roster-par-text" rows="5" class="zenf-textarea text-xs" placeholder="Liste os vigilantes e postos da escala par..."></textarea>
+            <p class="text-[11px] text-slate-400">Todas as alterações ficam salvas automaticamente no aparelho.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- ABA 3: POSTOS DE SERVIÇO & VIGILANTES HORISTAS                      -->
+      <!-- =================================================================== -->
+      <section id="tab-postos" class="tab-panel is-hidden space-y-4">
+        <div class="card-panel p-4 sm:p-5">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h2 id="posto-form-title" class="text-base font-bold text-white">Cadastrar Posto de Serviço</h2>
+              <p class="text-xs text-slate-400">Controle total dos postos e vigilantes fixos alocados.</p>
+            </div>
+            <button type="button" id="posto-cancel-edit-btn" class="is-hidden text-xs text-rose-300 font-semibold px-2.5 py-1 rounded-lg bg-rose-950/50 border border-rose-500/30 cursor-pointer">
+              Cancelar Edição
+            </button>
+          </div>
+
+          <form id="posto-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input type="hidden" id="posto-edit-id" value="" />
+            <div>
+              <label for="posto-nome" class="block text-[11px] text-slate-300 mb-1">Nome do Posto *</label>
+              <input id="posto-nome" type="text" required placeholder="Ex: Posto Central · Portaria 01" class="zenf-input text-xs" />
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label for="posto-turno" class="block text-[11px] text-slate-300 mb-1">Turno</label>
+                <select id="posto-turno" class="zenf-select text-xs px-2">
+                  <option value="24h">24h</option>
+                  <option value="Diurno">Diurno</option>
+                  <option value="Noturno">Noturno</option>
+                </select>
+              </div>
+              <div>
+                <label for="posto-escala" class="block text-[11px] text-slate-300 mb-1">Escala</label>
+                <select id="posto-escala" class="zenf-select text-xs px-2">
+                  <option value="Ímpar/Par">Ímpar/Par</option>
+                  <option value="Ímpar">Ímpar</option>
+                  <option value="Par">Par</option>
+                  <option value="12x36">12x36</option>
+                </select>
+              </div>
+              <div>
+                <label for="posto-qtd" class="block text-[11px] text-slate-300 mb-1">Qtd. Vig.</label>
+                <input id="posto-qtd" type="number" min="1" max="99" value="2" class="zenf-input text-xs px-2 text-center" />
+              </div>
+            </div>
+            <div class="sm:col-span-2">
+              <label for="posto-vigilantes" class="block text-[11px] text-slate-300 mb-1">Vigilantes Alocados no Posto</label>
+              <input id="posto-vigilantes" type="text" placeholder="Ex: Carlos Silva (Diurno), Marcos Souza (Noturno)" class="zenf-input text-xs" />
+            </div>
+            <div class="sm:col-span-2 flex justify-end">
+              <button type="submit" id="posto-submit-btn" class="w-full sm:w-auto px-5 py-2.5 rounded-xl zenf-gradient text-white text-xs font-bold cursor-pointer">
+                Salvar Posto de Serviço
+              </button>
+            </div>
+          </form>
+
+          <div id="postos-list" class="mt-4 space-y-2.5"></div>
+        </div>
+
+        <div class="card-panel p-4 sm:p-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+            <div>
+              <h2 id="horista-form-title" class="text-base font-bold text-white">Vigilantes Horistas (Diurno / Noturno)</h2>
+              <p class="text-xs text-slate-400">Cadastre os horistas disponíveis e a quantidade de coberturas por turno.</p>
+            </div>
+            <div id="horistas-totals-badges" class="flex flex-wrap gap-1.5 text-[11px] font-bold">
+              <span class="px-2.5 py-1 rounded-lg bg-sky-500/15 text-sky-300 border border-sky-500/30">Diurno: 0</span>
+              <span class="px-2.5 py-1 rounded-lg bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">Noturno: 0</span>
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Total: 0</span>
+            </div>
+          </div>
+
+          <form id="horista-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input type="hidden" id="horista-edit-id" value="" />
+            <div>
+              <label for="horista-nome" class="block text-[11px] text-slate-300 mb-1">Nome do Vigilante Horista *</label>
+              <input id="horista-nome" type="text" required placeholder="Ex: Rafael Mendes" class="zenf-input text-xs" />
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label for="horista-turno" class="block text-[11px] text-slate-300 mb-1">Turno</label>
+                <select id="horista-turno" class="zenf-select text-xs px-2">
+                  <option value="Diurno">Diurno</option>
+                  <option value="Noturno">Noturno</option>
+                  <option value="Diurno e Noturno">Ambos</option>
+                </select>
+              </div>
+              <div>
+                <label for="horista-qtd" class="block text-[11px] text-slate-300 mb-1">Quantidade</label>
+                <input id="horista-qtd" type="number" min="1" max="99" value="1" class="zenf-input text-xs px-2 text-center" />
+              </div>
+              <div>
+                <label for="horista-status" class="block text-[11px] text-slate-300 mb-1">Status</label>
+                <select id="horista-status" class="zenf-select text-xs px-2">
+                  <option value="Disponível">Disponível</option>
+                  <option value="Em Cobertura">Cobertura</option>
+                  <option value="Folga">Folga</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label for="horista-telefone" class="block text-[11px] text-slate-300 mb-1">Telefone / Contato</label>
+              <input id="horista-telefone" type="text" placeholder="Ex: (47) 99999-0000" class="zenf-input text-xs" />
+            </div>
+            <div class="flex items-end gap-2">
+              <button type="submit" id="horista-submit-btn" class="flex-1 py-2.5 px-4 rounded-xl zenf-gradient text-white text-xs font-bold cursor-pointer">
+                Salvar Horista
+              </button>
+              <button type="button" id="horista-cancel-edit-btn" class="is-hidden py-2.5 px-3 rounded-xl bg-rose-950/60 text-rose-300 text-xs font-semibold border border-rose-500/30 cursor-pointer">
+                Cancelar
+              </button>
+            </div>
+          </form>
+
+          <div id="horistas-list" class="mt-4 space-y-2"></div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- ABA 4: FÉRIAS (AVISO 10 DIAS) & RECICLAGEM DE VIGILANTES            -->
+      <!-- =================================================================== -->
+      <section id="tab-ferias" class="tab-panel is-hidden space-y-4">
+        <div class="card-panel p-4 sm:p-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+            <div>
+              <h2 id="ferias-form-title" class="text-base font-bold text-white">Férias de Vigilantes · Alerta 10 Dias Antes</h2>
+              <p class="text-xs text-slate-400">Notificação sonora e por voz automática quando faltarem 10 dias para o retorno ao serviço.</p>
+            </div>
+            <button type="button" id="test-10day-alert-btn" class="px-3 py-2 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-400/30 shrink-0 cursor-pointer">
+              Testar Aviso 10 Dias
+            </button>
+          </div>
+
+          <form id="ferias-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input type="hidden" id="ferias-edit-id" value="" />
+            <div>
+              <label for="ferias-nome" class="block text-[11px] text-slate-300 mb-1">Nome do Vigilante *</label>
+              <input id="ferias-nome" type="text" required placeholder="Ex: João Ferreira" class="zenf-input text-xs" />
+            </div>
+            <div>
+              <label for="ferias-posto" class="block text-[11px] text-slate-300 mb-1">Posto de Serviço</label>
+              <input id="ferias-posto" type="text" placeholder="Ex: Posto Norte · Gate 2" class="zenf-input text-xs" />
+            </div>
+            <div>
+              <label for="ferias-situacao" class="block text-[11px] text-slate-300 mb-1">Situação</label>
+              <select id="ferias-situacao" class="zenf-select text-xs">
+                <option value="Em Férias">Em Férias (Aguardando Retorno)</option>
+                <option value="Programado">Programado para Entrar de Férias</option>
+              </select>
+            </div>
+            <div>
+              <label for="ferias-substituto" class="block text-[11px] text-slate-300 mb-1">Horista Substituto</label>
+              <input id="ferias-substituto" type="text" placeholder="Ex: Rafael Mendes (Horista)" class="zenf-input text-xs" />
+            </div>
+            <div>
+              <label for="ferias-inicio" class="block text-[11px] text-slate-300 mb-1">Data de Saída (Início) *</label>
+              <input id="ferias-inicio" type="date" required class="zenf-input text-xs" />
+            </div>
+            <div>
+              <label for="ferias-retorno" class="block text-[11px] text-slate-300 mb-1">Data de Retorno ao Serviço *</label>
+              <input id="ferias-retorno" type="date" required class="zenf-input text-xs" />
+            </div>
+            <div class="sm:col-span-2 flex items-center gap-2">
+              <button type="submit" id="ferias-submit-btn" class="flex-1 py-2.5 px-4 rounded-xl zenf-gradient text-white text-xs font-bold cursor-pointer">
+                Salvar Registro de Férias
+              </button>
+              <button type="button" id="ferias-cancel-edit-btn" class="is-hidden py-2.5 px-3 rounded-xl bg-rose-950/60 text-rose-300 text-xs font-semibold border border-rose-500/30 cursor-pointer">
+                Cancelar
+              </button>
+            </div>
+          </form>
+
+          <div id="ferias-list" class="mt-4 space-y-2.5"></div>
+        </div>
+
+        <div class="card-panel p-4 sm:p-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+            <div>
+              <h2 id="reciclagem-form-title" class="text-base font-bold text-white">Reciclagem do Curso de Vigilante</h2>
+              <p class="text-xs text-slate-400">Acompanhe quem precisa fazer/vence, quem está em reciclagem e quem está encerrando.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" id="test-reciclagem-alert-btn" class="px-3 py-1.5 rounded-xl bg-sky-500/20 text-sky-300 text-xs font-bold border border-sky-400/30 cursor-pointer">
+                Testar Aviso Reciclagem
+              </button>
+              <button type="button" id="reciclagem-cancel-edit-btn" class="is-hidden text-xs text-rose-300 font-semibold px-2.5 py-1 rounded-lg bg-rose-950/50 border border-rose-500/30 cursor-pointer">
+                Cancelar
+              </button>
+            </div>
+          </div>
+
+          <div id="reciclagem-summary-badges" class="grid grid-cols-3 gap-2 mb-3 text-center"></div>
+
+          <form id="reciclagem-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input type="hidden" id="reciclagem-edit-id" value="" />
+            <div>
+              <label for="reciclagem-nome" class="block text-[11px] text-slate-300 mb-1">Nome do Vigilante *</label>
+              <input id="reciclagem-nome" type="text" required placeholder="Ex: André Luiz Costa" class="zenf-input text-xs" />
+            </div>
+            <div>
+              <label for="reciclagem-status" class="block text-[11px] text-slate-300 mb-1">Etapa da Reciclagem</label>
+              <select id="reciclagem-status" class="zenf-select text-xs">
+                <option value="Precisa Fazer">Precisa Fazer / Vencendo</option>
+                <option value="Em Reciclagem">Em Reciclagem (Cursando)</option>
+                <option value="Encerrando">Encerrando / Concluída</option>
+              </select>
+            </div>
+            <div>
+              <label for="reciclagem-posto" class="block text-[11px] text-slate-300 mb-1">Posto / Academia</label>
+              <input id="reciclagem-posto" type="text" placeholder="Ex: Posto Sul · Academia Catarinense" class="zenf-input text-xs" />
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label for="reciclagem-inicio" class="block text-[11px] text-slate-300 mb-1">Início / Prazo *</label>
+                <input id="reciclagem-inicio" type="date" required class="zenf-input text-xs px-2" />
+              </div>
+              <div>
+                <label for="reciclagem-fim" class="block text-[11px] text-slate-300 mb-1">Encerramento *</label>
+                <input id="reciclagem-fim" type="date" required class="zenf-input text-xs px-2" />
+              </div>
+            </div>
+            <div class="sm:col-span-2">
+              <button type="submit" id="reciclagem-submit-btn" class="w-full py-2.5 px-4 rounded-xl zenf-gradient text-white text-xs font-bold cursor-pointer">
+                Salvar Reciclagem
+              </button>
+            </div>
+          </form>
+
+          <div id="reciclagens-list" class="mt-4 space-y-2.5"></div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- ABA 5: AGENDA PROGRAMADA, VOZ ZENF IA & BACKUP                      -->
+      <!-- =================================================================== -->
+      <section id="tab-agenda" class="tab-panel is-hidden space-y-4">
+        <div class="card-panel p-4 sm:p-5">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h2 id="task-form-title" class="text-base font-bold text-white">Agenda Operacional & Avisos Programados</h2>
+              <p class="text-xs text-slate-400">No horário programado, o sistema dispara alerta sonoro e anúncio por voz.</p>
+            </div>
+            <button type="button" id="task-cancel-edit-btn" class="is-hidden text-xs text-rose-300 font-semibold px-2.5 py-1 rounded-lg bg-rose-950/50 border border-rose-500/30 cursor-pointer">
+              Cancelar
+            </button>
+          </div>
+
+          <form id="task-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input type="hidden" id="task-edit-id" value="" />
+            <div class="sm:col-span-2">
+              <label for="task-title" class="block text-[11px] text-slate-300 mb-1">Atividade / Lembrete *</label>
+              <input id="task-title" type="text" required placeholder="Ex: Conferir rendição turno noturno Posto Central" class="zenf-input text-xs" />
+            </div>
+            <div>
+              <label for="task-date" class="block text-[11px] text-slate-300 mb-1">Data *</label>
+              <input id="task-date" type="date" required class="zenf-input text-xs" />
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label for="task-time" class="block text-[11px] text-slate-300 mb-1">Horário *</label>
+                <input id="task-time" type="time" required class="zenf-input text-xs" />
+              </div>
+              <div>
+                <label for="task-priority" class="block text-[11px] text-slate-300 mb-1">Prioridade</label>
+                <select id="task-priority" class="zenf-select text-xs px-2">
+                  <option value="Normal">Normal</option>
+                  <option value="Alta">Alta</option>
+                  <option value="Crítica">Crítica</option>
+                </select>
+              </div>
+            </div>
+            <div class="sm:col-span-2">
+              <button type="submit" id="task-submit-btn" class="w-full py-2.5 px-4 rounded-xl zenf-gradient text-white text-xs font-bold cursor-pointer">
+                Agendar com Alerta Sonoro
+              </button>
+            </div>
+          </form>
+
+          <div id="tasks-full-list" class="mt-4 space-y-2"></div>
+        </div>
+
+        <div class="card-panel p-4 sm:p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-bold text-white">ZenF IA · Voz Feminina & Ativação Both</h3>
+              <p class="text-xs text-slate-400">Personalidade profissional e cordial · Botão de toque + escuta contínua opcional.</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30">BOTH ATIVO</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="voice-select" class="block text-[11px] text-slate-300 mb-1">Voz Feminina do Sistema</label>
+              <select id="voice-select" class="zenf-select text-xs"></select>
+            </div>
+            <div>
+              <div class="flex justify-between text-[11px] text-slate-300 mb-1">
+                <label for="voice-rate">Ritmo Suave da Fala</label>
+                <span id="rate-val" class="font-bold text-sky-400">0.95x</span>
+              </div>
+              <input id="voice-rate" type="range" min="0.82" max="1.20" step="0.01" value="0.95" class="w-full accent-sky-400 mt-2" />
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+            <label class="inline-flex items-center gap-2 text-xs text-slate-200 cursor-pointer">
+              <input id="continuous-voice-toggle" type="checkbox" class="w-4 h-4 accent-sky-500" />
+              <span>Ativar escuta contínua por voz (Hands-free)</span>
+            </label>
+
+            <button type="button" id="test-voice-sound-btn" class="px-3.5 py-2 rounded-xl bg-slate-800 text-sky-300 text-xs font-semibold border border-sky-500/30 cursor-pointer">
+              Testar Voz & Alarme
+            </button>
+          </div>
+        </div>
+
+        <div class="card-panel p-4 sm:p-5 space-y-3">
+          <div>
+            <h3 class="text-base font-bold text-white">Preservação de Dados & Backup (.JSON)</h3>
+            <p class="text-xs text-slate-400">Exporte seus cadastros antes de atualizar o arquivo ou restaure um backup.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <button type="button" id="export-backup-btn" class="py-2.5 px-3 rounded-xl bg-sky-600/25 text-sky-200 text-xs font-bold border border-sky-400/30 cursor-pointer">
+              Exportar Backup .JSON
+            </button>
+
+            <label class="py-2.5 px-3 rounded-xl bg-indigo-600/25 text-indigo-200 text-xs font-bold border border-indigo-400/30 text-center cursor-pointer">
+              <span>Importar Backup .JSON</span>
+              <input id="import-backup-input" type="file" accept=".json,application/json" class="hidden" />
+            </label>
+
+            <button type="button" id="reset-defaults-btn" class="py-2.5 px-3 rounded-xl bg-rose-950/50 text-rose-300 text-xs font-bold border border-rose-500/30 cursor-pointer">
+              Restaurar Dados Padrão
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Barra de Navegação Inferior Fixa Mobile-First (5 Abas) -->
+    <nav class="bottom-nav-bar" aria-label="Navegação Principal">
+      <div class="max-w-4xl mx-auto grid grid-cols-5 gap-1">
+        <button type="button" class="tab-btn active" data-tab="overview">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+          </svg>
+          <span>Início</span>
+        </button>
+
+        <button type="button" class="tab-btn" data-tab="escala">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+          </svg>
+          <span>Escala</span>
+        </button>
+
+        <button type="button" class="tab-btn" data-tab="postos">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+          </svg>
+          <span>Postos</span>
+        </button>
+
+        <button type="button" class="tab-btn" data-tab="ferias">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Férias</span>
+        </button>
+
+        <button type="button" class="tab-btn" data-tab="agenda">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+          </svg>
+          <span>Agenda</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 3. NÚCLEO JAVASCRIPT BLINDADO (SINGLE-FILE AUTOCONTIDO)               -->
+  <!-- ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      // ---------------------------------------------------------------------
+      // A. UTILITÁRIOS SEGUROS (STORAGE COM FALLBACK, DATAS LOCAIS E HTML ESCAPE)
+      // ---------------------------------------------------------------------
+      const STORAGE_KEY = 'zenf_agenda_supervisor_roberto_v4';
+      const memoryStorageFallback = {};
+
+      function safeStorageGet(key) {
+        try {
+          if (window.localStorage) {
+            return window.localStorage.getItem(key);
+          }
+        } catch (e) {}
+        return Object.prototype.hasOwnProperty.call(memoryStorageFallback, key)
+          ? memoryStorageFallback[key]
+          : null;
+      }
+
+      function safeStorageSet(key, value) {
+        memoryStorageFallback[key] = value;
+        try {
+          if (window.localStorage) {
+            window.localStorage.setItem(key, value);
+          }
+        } catch (e) {}
+      }
+
+      function escapeHtml(str) {
+        return String(str ?? '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function generateId(prefix) {
+        return (prefix || 'id') + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
+      }
+
+      function toLocalISODate(dateObj) {
+        const d = dateObj instanceof Date ? dateObj : new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+
+      function addDaysToTodayISO(offsetDays) {
+        const d = new Date();
+        d.setHours(12, 0, 0, 0);
+        d.setDate(d.getDate() + Number(offsetDays || 0));
+        return toLocalISODate(d);
+      }
+
+      function parseLocalDate(isoStr) {
+        if (!isoStr || typeof isoStr !== 'string') return null;
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoStr.trim());
+        if (!match) return null;
+        const year = Number(match[1]);
+        const month = Number(match[2]);
+        const day = Number(match[3]);
+        const dt = new Date(year, month - 1, day, 12, 0, 0, 0);
+        if (dt.getFullYear() !== year || dt.getMonth() !== month - 1 || dt.getDate() !== day) {
+          return null;
+        }
+        return dt;
+      }
+
+      function formatDateBR(isoStr) {
+        const dt = parseLocalDate(isoStr);
+        if (!dt) return isoStr || '--/--/----';
+        const d = String(dt.getDate()).padStart(2, '0');
+        const m = String(dt.getMonth() + 1).padStart(2, '0');
+        const y = dt.getFullYear();
+        return `${d}/${m}/${y}`;
+      }
+
+      function diffDaysFromToday(isoStr) {
+        const target = parseLocalDate(isoStr);
+        if (!target) return null;
+        const now = new Date();
+        const todayNoon = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0, 0);
+        return Math.round((target.getTime() - todayNoon.getTime()) / 86400000);
+      }
+
+      function normalizeReciclagemStatus(status) {
+        if (status === 'Em Andamento' || status === 'Em Reciclagem') return 'Em Reciclagem';
+        if (status === 'Encerrando' || status === 'Encerrando / Concluída') return 'Encerrando';
+        return 'Precisa Fazer';
+      }
+
+      function nextReciclagemStatus(currentStatus) {
+        const norm = normalizeReciclagemStatus(currentStatus);
+        if (norm === 'Precisa Fazer') return 'Em Reciclagem';
+        if (norm === 'Em Reciclagem') return 'Encerrando';
+        return 'Precisa Fazer';
+      }
+
+      // ---------------------------------------------------------------------
+      // B. ESTADO PADRÃO & PERSISTÊNCIA
+      // ---------------------------------------------------------------------
+      function createDefaultState() {
+        const todayISO = toLocalISODate(new Date());
+        return {
+          loggedIn: false,
+          activeTab: 'overview',
+          simulatedDay: null,
+          voiceName: '',
+          voiceRate: 0.95,
+          continuousVoice: false,
+          last10DayAlertSignature: '',
+          rosterImpar:
+            '• Posto Central (24h): Vig. Carlos Silva (Diurno) / Vig. Marcos Souza (Noturno)\n' +
+            '• Posto Logística Norte: Vig. Paulo Henrique (Diurno) / Vig. Ricardo Alves (Noturno)\n' +
+            '• Ronda Motorizada Brasil Sul: Vig. Fernando Rocha',
+          rosterPar:
+            '• Posto Central (24h): Vig. Eduardo Lima (Diurno) / Vig. Tiago Martins (Noturno)\n' +
+            '• Posto Logística Norte: Vig. Sérgio Oliveira (Diurno) / Vig. Bruno Costa (Noturno)\n' +
+            '• Ronda Motorizada Brasil Sul: Vig. Leandro Dias',
+          postos: [
+            {
+              id: 'pst_1',
+              nome: 'Posto Central · Portaria Principal',
+              turno: '24h',
+              escala: 'Ímpar/Par',
+              qtd: 4,
+              vigilantes: 'Carlos Silva, Marcos Souza, Eduardo Lima, Tiago Martins'
+            },
+            {
+              id: 'pst_2',
+              nome: 'Unidade Logística Brasil Sul',
+              turno: '24h',
+              escala: 'Ímpar/Par',
+              qtd: 4,
+              vigilantes: 'Paulo Henrique, Ricardo Alves, Sérgio Oliveira, Bruno Costa'
+            },
+            {
+              id: 'pst_3',
+              nome: 'Posto Regional Pomerode / Blumenau',
+              turno: 'Diurno',
+              escala: '12x36',
+              qtd: 2,
+              vigilantes: 'Gilberto Nunes, Rodrigo Pereira'
+            }
+          ],
+          horistas: [
+            {
+              id: 'hor_1',
+              nome: 'Rafael Mendes',
+              turno: 'Diurno',
+              qtd: 2,
+              status: 'Disponível',
+              telefone: '(47) 99123-4410'
+            },
+            {
+              id: 'hor_2',
+              nome: 'Lucas Santana',
+              turno: 'Noturno',
+              qtd: 2,
+              status: 'Disponível',
+              telefone: '(47) 99844-1102'
+            },
+            {
+              id: 'hor_3',
+              nome: 'Diego Nascimento',
+              turno: 'Diurno e Noturno',
+              qtd: 1,
+              status: 'Em Cobertura',
+              telefone: '(47) 99210-7788'
+            }
+          ],
+          ferias: [
+            {
+              id: 'fer_1',
+              nome: 'João Ferreira',
+              posto: 'Posto Central · Portaria Principal',
+              situacao: 'Em Férias',
+              substituto: 'Rafael Mendes (Horista)',
+              inicio: addDaysToTodayISO(-20),
+              retorno: addDaysToTodayISO(10)
+            },
+            {
+              id: 'fer_2',
+              nome: 'Cláudio Ramos',
+              posto: 'Unidade Logística Brasil Sul',
+              situacao: 'Programado',
+              substituto: 'Lucas Santana (Horista)',
+              inicio: addDaysToTodayISO(14),
+              retorno: addDaysToTodayISO(44)
+            }
+          ],
+          reciclagens: [
+            {
+              id: 'rec_1',
+              nome: 'André Luiz Costa',
+              status: 'Encerrando',
+              posto: 'Posto Central · Academia Regional',
+              inicio: addDaysToTodayISO(-4),
+              fim: addDaysToTodayISO(1)
+            },
+            {
+              id: 'rec_2',
+              nome: 'Marcelo Vieira',
+              status: 'Precisa Fazer',
+              posto: 'Unidade Logística · Escola de Formação',
+              inicio: addDaysToTodayISO(5),
+              fim: addDaysToTodayISO(10)
+            },
+            {
+              id: 'rec_3',
+              nome: 'Patrício Almeida',
+              status: 'Em Reciclagem',
+              posto: 'Posto Regional · Centro de Treinamento',
+              inicio: addDaysToTodayISO(-2),
+              fim: addDaysToTodayISO(3)
+            }
+          ],
+          tasks: [
+            {
+              id: 'tsk_1',
+              title: 'Conferir rendição da escala e assinatura do livro de ocorrências',
+              date: todayISO,
+              time: '18:30',
+              priority: 'Alta',
+              done: false,
+              alerted: false
+            },
+            {
+              id: 'tsk_2',
+              title: 'Validar cobertura de horistas para o próximo plantão',
+              date: todayISO,
+              time: '21:00',
+              priority: 'Normal',
+              done: false,
+              alerted: false
+            }
+          ]
+        };
+      }
+
+      function loadState() {
+        const fallback = createDefaultState();
+        try {
+          const raw = safeStorageGet(STORAGE_KEY);
+          if (!raw) return fallback;
+          const parsed = JSON.parse(raw);
+          if (!parsed || typeof parsed !== 'object') return fallback;
+          const cleanRecs = Array.isArray(parsed.reciclagens)
+            ? parsed.reciclagens.map((r) => ({ ...r, status: normalizeReciclagemStatus(r.status) }))
+            : fallback.reciclagens;
+          return {
+            ...fallback,
+            ...parsed,
+            postos: Array.isArray(parsed.postos) ? parsed.postos : fallback.postos,
+            horistas: Array.isArray(parsed.horistas) ? parsed.horistas : fallback.horistas,
+            ferias: Array.isArray(parsed.ferias) ? parsed.ferias : fallback.ferias,
+            reciclagens: cleanRecs,
+            tasks: Array.isArray(parsed.tasks) ? parsed.tasks : fallback.tasks
+          };
+        } catch (e) {
+          console.warn('Restaurando estado padrão após leitura inválida:', e);
+          return fallback;
+        }
+      }
+
+      let appState = loadState();
+
+      function saveState() {
+        try {
+          safeStorageSet(STORAGE_KEY, JSON.stringify(appState));
+        } catch (e) {
+          console.warn('Falha ao salvar estado:', e);
+        }
+      }
+
+      // ---------------------------------------------------------------------
+      // C. SISTEMA DE ÁUDIO WEB (ALERTA SONORO) & VOZ FEMININA CORDIAL ZENF IA
+      // ---------------------------------------------------------------------
+      let audioCtx = null;
+
+      function unlockAudioSystem(playTestTone) {
+        try {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) return;
+          if (!audioCtx) {
+            audioCtx = new AudioContextClass();
+          }
+          if (audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(() => {});
+          }
+          if (playTestTone) {
+            playAlertSound('chime');
+          }
+        } catch (e) {}
+      }
+
+      function playAlertSound(type) {
+        try {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) return;
+          if (!audioCtx) {
+            audioCtx = new AudioContextClass();
+          }
+          if (audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(() => {});
+          }
+
+          const now = audioCtx.currentTime;
+          const notes = type === 'urgent'
+            ? [659.25, 880, 1046.5, 880, 1046.5]
+            : [523.25, 659.25, 783.99];
+
+          notes.forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type === 'urgent' ? 'triangle' : 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.14);
+
+            gain.gain.setValueAtTime(0.001, now + idx * 0.14);
+            gain.gain.exponentialRampToValueAtTime(0.18, now + idx * 0.14 + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.14 + 0.24);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + idx * 0.14);
+            osc.stop(now + idx * 0.14 + 0.26);
+          });
+        } catch (e) {}
+      }
+
+      function getFemalePortugueseVoice() {
+        try {
+          if (!('speechSynthesis' in window)) return null;
+          const voices = window.speechSynthesis.getVoices() || [];
+          if (!voices.length) return null;
+
+          if (appState.voiceName) {
+            const chosen = voices.find((v) => v.name === appState.voiceName);
+            if (chosen) return chosen;
+          }
+
+          const ptVoices = voices.filter((v) => /pt[-_]?BR|pt/i.test(v.lang));
+          const femaleHints = /google portugu[eê]s|luciana|francisca|maria|vit[oó]ria|camila|fernanda|heloisa|leticia|female|feminina/i;
+          return (
+            ptVoices.find((v) => femaleHints.test(v.name)) ||
+            ptVoices[0] ||
+            voices.find((v) => femaleHints.test(v.name)) ||
+            voices[0]
+          );
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function populateFemaleVoices() {
+        try {
+          const select = document.getElementById('voice-select');
+          if (!select) return;
+          if (!('speechSynthesis' in window)) {
+            select.innerHTML = '<option value="">Síntese de voz não suportada neste navegador</option>';
+            return;
+          }
+          const voices = window.speechSynthesis.getVoices() || [];
+          const ptVoices = voices.filter((v) => /pt/i.test(v.lang));
+          const list = ptVoices.length ? ptVoices : voices;
+
+          if (!list.length) {
+            select.innerHTML = '<option value="">Voz Feminina Cordial PT-BR</option>';
+            return;
+          }
+
+          select.innerHTML = list
+            .map((v) => `<option value="${escapeHtml(v.name)}">${escapeHtml(v.name)} (${escapeHtml(v.lang)})</option>`)
+            .join('');
+
+          const preferred = getFemalePortugueseVoice();
+          if (preferred) {
+            select.value = preferred.name;
+            if (!appState.voiceName) {
+              appState.voiceName = preferred.name;
+            }
+          }
+        } catch (e) {}
+      }
+
+      function speakWithZenF(text) {
+        try {
+          const statusLine = document.getElementById('zenf-status-line');
+          if (statusLine) {
+            statusLine.textContent = 'ZenF IA: ' + text;
+          }
+          if (!('speechSynthesis' in window)) return;
+          window.speechSynthesis.cancel();
+          const normalizedText = String(text || '')
+            .replace(/\bÍMPAR\b/g, 'ímpar')
+            .replace(/\bPAR\b/g, 'par')
+            .replace(/ZenF/g, 'Zên Éfe');
+          const utter = new SpeechSynthesisUtterance(normalizedText);
+          utter.lang = 'pt-BR';
+          utter.rate = Math.min(1.12, Math.max(0.82, Number(appState.voiceRate) || 0.95));
+          utter.pitch = 1.05;
+          utter.volume = 0.92;
+          const voice = getFemalePortugueseVoice();
+          if (voice) utter.voice = voice;
+          window.speechSynthesis.speak(utter);
+        } catch (e) {}
+      }
+
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = populateFemaleVoices;
+      }
+
+      // ---------------------------------------------------------------------
+      // D. RECONHECIMENTO DE VOZ (BOTÃO + ESCUTA CONTÍNUA BOTH)
+      // ---------------------------------------------------------------------
+      let continuousRecognition = null;
+
+      function processZenFCommand(rawTranscript) {
+        const cmd = String(rawTranscript || '').trim();
+        if (!cmd) return;
+        const lower = cmd.toLowerCase();
+
+        if (lower.includes('escala') || lower.includes('ímpar') || lower.includes('impar') || lower.includes('par')) {
+          switchTab('escala');
+          const info = getCurrentParityInfo();
+          speakWithZenF(`Com certeza, Roberto. Abri a tela de escalas para você. Hoje é dia ${info.day}, e estamos com a escala ímpar configurada no calendário.`);
+          return;
+        }
+
+        if (lower.includes('posto') || lower.includes('horista')) {
+          switchTab('postos');
+          const tot = getHoristasTotals();
+          speakWithZenF(`Abri a tela de postos e horistas para você. Temos ${appState.postos.length} postos cadastrados e ${tot.total} coberturas de horistas.`);
+          return;
+        }
+
+        if (lower.includes('féria') || lower.includes('feria') || lower.includes('reciclagem')) {
+          switchTab('ferias');
+          const alerts = getUrgentAlertsData();
+          speakWithZenF(`Abri a tela de férias e reciclagens. No momento temos ${alerts.length} avisos no acompanhamento de dez dias e reciclagens.`);
+          return;
+        }
+
+        if (lower.includes('agenda') || lower.includes('tarefa') || lower.includes('compromisso')) {
+          switchTab('agenda');
+          speakWithZenF('Pronto, Roberto. Abri a sua agenda operacional.');
+          return;
+        }
+
+        if (lower.includes('início') || lower.includes('inicio') || lower.includes('visão') || lower.includes('resumo')) {
+          switchTab('overview');
+          speakOperationalBriefing();
+          return;
+        }
+
+        if (lower.startsWith('agendar ') || lower.startsWith('lembrar ') || lower.includes('às ') || lower.includes('as ')) {
+          const timeMatch = /(\d{1,2})[:h](\d{2})/.exec(lower);
+          const timeStr = timeMatch
+            ? `${String(Math.min(23, Number(timeMatch[1]))).padStart(2, '0')}:${String(Math.min(59, Number(timeMatch[2]))).padStart(2, '0')}`
+            : '20:00';
+          const cleanTitle = cmd
+            .replace(/^(agendar|lembrar)\s+/i, '')
+            .replace(/\s*(às|as)\s*\d{1,2}[:h]\d{2}/i, '')
+            .trim() || 'Compromisso agendado por voz';
+
+          appState.tasks.unshift({
+            id: generateId('tsk'),
+            title: cleanTitle,
+            date: toLocalISODate(new Date()),
+            time: timeStr,
+            priority: 'Alta',
+            done: false,
+            alerted: false
+          });
+          saveState();
+          renderAllTasks();
+          playAlertSound('chime');
+          speakWithZenF(`Tudo certo, Roberto. Registrei ${cleanTitle} para às ${timeStr} com aviso sonoro.`);
+          showToast(`Agendado: ${cleanTitle} (${timeStr})`);
+          return;
+        }
+
+        speakWithZenF(`Entendi o seu pedido sobre ${cmd}. Quando desejar, posso abrir escalas, postos, férias, reciclagem ou agendar um horário.`);
+      }
+
+      function startSingleVoiceCapture() {
+        unlockAudioSystem(false);
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRec) {
+          showToast('Microfone indisponível neste navegador. Use a barra de comando por texto.');
+          const input = document.getElementById('quick-command-input');
+          if (input) input.focus();
+          return;
+        }
+
+        try {
+          const rec = new SpeechRec();
+          rec.lang = 'pt-BR';
+          rec.interimResults = false;
+          rec.maxAlternatives = 1;
+
+          const btn1 = document.getElementById('header-voice-btn');
+          const btn2 = document.getElementById('overview-speak-btn');
+          btn1?.classList.add('voice-listening');
+          btn2?.classList.add('voice-listening');
+          showToast('Estou ouvindo você, Roberto...');
+
+          rec.onresult = (event) => {
+            const transcript = event?.results?.[0]?.[0]?.transcript || '';
+            processZenFCommand(transcript);
+          };
+
+          rec.onerror = () => {
+            showToast('Não foi possível captar voz agora. Você pode digitar na barra rápida.');
+          };
+
+          rec.onend = () => {
+            btn1?.classList.remove('voice-listening');
+            btn2?.classList.remove('voice-listening');
+          };
+
+          rec.start();
+        } catch (e) {
+          showToast('Permissão de microfone indisponível. Digite seu comando na barra rápida.');
+        }
+      }
+
+      function toggleContinuousVoice(enabled) {
+        appState.continuousVoice = Boolean(enabled);
+        saveState();
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRec) {
+          if (enabled) {
+            showToast('Escuta contínua não suportada neste navegador mobile.');
+            const chk = document.getElementById('continuous-voice-toggle');
+            if (chk) chk.checked = false;
+            appState.continuousVoice = false;
+            saveState();
+          }
+          return;
+        }
+
+        if (!enabled) {
+          try { continuousRecognition?.stop(); } catch (e) {}
+          continuousRecognition = null;
+          return;
+        }
+
+        try {
+          continuousRecognition = new SpeechRec();
+          continuousRecognition.lang = 'pt-BR';
+          continuousRecognition.continuous = true;
+          continuousRecognition.interimResults = false;
+
+          continuousRecognition.onresult = (event) => {
+            const last = event.results[event.results.length - 1];
+            if (last && last.isFinal) {
+              processZenFCommand(last[0].transcript);
+            }
+          };
+
+          continuousRecognition.onend = () => {
+            if (appState.continuousVoice && appState.loggedIn && continuousRecognition) {
+              setTimeout(() => {
+                try { continuousRecognition.start(); } catch (e) {}
+              }, 650);
+            }
+          };
+
+          continuousRecognition.start();
+          showToast('Escuta contínua ZenF IA ativada.');
+        } catch (e) {
+          showToast('Não foi possível iniciar escuta contínua.');
+        }
+      }
+
+      // ---------------------------------------------------------------------
+      // E. TOAST & NAVEGAÇÃO ENTRE AS 5 ABAS
+      // ---------------------------------------------------------------------
+      let toastTimer = null;
+
+      function showToast(msg) {
+        const banner = document.getElementById('toast-banner');
+        const msgEl = document.getElementById('toast-message');
+        if (!banner || !msgEl) return;
+        msgEl.textContent = msg;
+        banner.classList.remove('is-hidden');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          banner.classList.add('is-hidden');
+        }, 4200);
+      }
+
+      function switchTab(tabName) {
+        const validTabs = ['overview', 'escala', 'postos', 'ferias', 'agenda'];
+        const target = validTabs.includes(tabName) ? tabName : 'overview';
+        appState.activeTab = target;
+        saveState();
+
+        document.querySelectorAll('.tab-panel').forEach((sec) => {
+          if (sec.id === 'tab-' + target) {
+            sec.classList.remove('is-hidden');
+          } else {
+            sec.classList.add('is-hidden');
+          }
+        });
+
+        document.querySelectorAll('.tab-btn').forEach((btn) => {
+          if (btn.getAttribute('data-tab') === target) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+      }
+
+      // ---------------------------------------------------------------------
+      // F. AUTOMAÇÃO CALENDÁRIO 1 A 31 (ESCALA ÍMPAR / PAR)
+      // ---------------------------------------------------------------------
+      function getCurrentParityInfo() {
+        const now = new Date();
+        const realDay = now.getDate();
+        const activeDay = appState.simulatedDay ? Number(appState.simulatedDay) : realDay;
+        const isOdd = activeDay % 2 !== 0;
+        return {
+          day: activeDay,
+          realDay: realDay,
+          isSimulated: Boolean(appState.simulatedDay),
+          isOdd: isOdd,
+          parity: isOdd ? 'ÍMPAR' : 'PAR',
+          now: now
+        };
+      }
+
+      function populateDaySimulatorSelect() {
+        const select = document.getElementById('day-simulator-select');
+        if (!select) return;
+        let opts = '<option value="">Dia Real do Calendário</option>';
+        for (let d = 1; d <= 31; d++) {
+          const p = d % 2 !== 0 ? 'ÍMPAR' : 'PAR';
+          opts += `<option value="${d}">Simular Dia ${String(d).padStart(2, '0')} (${p})</option>`;
+        }
+        select.innerHTML = opts;
+        select.value = appState.simulatedDay ? String(appState.simulatedDay) : '';
+      }
+
+      function updateCalendarAndParityUI() {
+        const info = getCurrentParityInfo();
+        const timeStr = info.now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const dateStr = info.now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' });
+
+        const headerPill = document.getElementById('header-parity-pill');
+        if (headerPill) {
+          headerPill.textContent = info.parity;
+          headerPill.className = info.isOdd
+            ? 'px-2 py-0.5 rounded-full text-[10px] font-extrabold tracking-wide bg-sky-500/20 text-sky-300 border border-sky-400/30'
+            : 'px-2 py-0.5 rounded-full text-[10px] font-extrabold tracking-wide bg-purple-500/20 text-purple-300 border border-purple-400/30';
+        }
+
+        const headerClock = document.getElementById('header-date-clock');
+        if (headerClock) {
+          const simTag = info.isSimulated ? ` · Simulado dia ${info.day}` : '';
+          headerClock.textContent = `Brasil Sul · ${dateStr} · ${timeStr}${simTag}`;
+        }
+
+        const kpiVal = document.getElementById('kpi-parity-value');
+        const kpiSub = document.getElementById('kpi-parity-sub');
+        if (kpiVal) {
+          kpiVal.textContent = info.parity;
+          kpiVal.className = info.isOdd
+            ? 'text-xl font-extrabold text-sky-400 mt-1'
+            : 'text-xl font-extrabold text-purple-400 mt-1';
+        }
+        if (kpiSub) {
+          kpiSub.textContent = `Dia ${info.day} (1–31) · Turno ${info.parity}`;
+        }
+
+        const banner = document.getElementById('escala-active-banner');
+        const bannerTitle = document.getElementById('escala-banner-title');
+        const bannerDesc = document.getElementById('escala-banner-desc');
+        const bannerBadge = document.getElementById('escala-banner-badge');
+
+        if (bannerTitle) {
+          bannerTitle.textContent = `ESCALA ${info.parity} · DIA ${String(info.day).padStart(2, '0')}`;
+        }
+        if (bannerDesc) {
+          bannerDesc.textContent = info.isSimulated
+            ? `Modo simulação ativo para o dia ${info.day} (Dia real hoje: ${info.realDay}).`
+            : `Sincronizado automaticamente com o calendário do aparelho (dia ${info.day} de 1 a 31).`;
+        }
+        if (bannerBadge) {
+          bannerBadge.textContent = info.parity;
+        }
+        if (banner) {
+          banner.className = info.isOdd
+            ? 'mt-4 rounded-2xl p-4 bg-sky-950/40 border border-sky-500/35 flex items-center justify-between gap-3'
+            : 'mt-4 rounded-2xl p-4 bg-purple-950/40 border border-purple-500/35 flex items-center justify-between gap-3';
+        }
+
+        const grid = document.getElementById('calendar-31-grid');
+        if (grid) {
+          let html = '';
+          for (let d = 1; d <= 31; d++) {
+            const odd = d % 2 !== 0;
+            const isSelected = d === info.day;
+            const baseCls = odd
+              ? 'bg-sky-950/50 border-sky-500/25 text-sky-200'
+              : 'bg-purple-950/50 border-purple-500/25 text-purple-200';
+            const activeCls = isSelected
+              ? 'ring-2 ring-white font-extrabold zenf-gradient text-white'
+              : '';
+            html += `
+              <button type="button" data-sim-day="${d}" class="py-2 rounded-xl border text-center cursor-pointer ${baseCls} ${activeCls}">
+                <div class="text-xs font-bold leading-none">${d}</div>
+                <div class="text-[9px] opacity-80 mt-0.5">${odd ? 'IMP' : 'PAR'}</div>
+              </button>
+            `;
+          }
+          grid.innerHTML = html;
+        }
+      }
+
+      // ---------------------------------------------------------------------
+      // G. POSTOS DE SERVIÇO & VIGILANTES HORISTAS
+      // ---------------------------------------------------------------------
+      function getHoristasTotals() {
+        let diurno = 0;
+        let noturno = 0;
+        let total = 0;
+        appState.horistas.forEach((h) => {
+          const q = Math.max(1, Number(h.qtd) || 1);
+          total += q;
+          if (h.turno === 'Diurno') diurno += q;
+          else if (h.turno === 'Noturno') noturno += q;
+          else {
+            diurno += q;
+            noturno += q;
+          }
+        });
+        return { diurno, noturno, total };
+      }
+
+      function renderPostos() {
+        const listEl = document.getElementById('postos-list');
+        const totalVigilantes = appState.postos.reduce((acc, p) => acc + (Number(p.qtd) || 0), 0);
+
+        const kpiPostos = document.getElementById('kpi-postos-value');
+        if (kpiPostos) {
+          kpiPostos.textContent = `${appState.postos.length} / ${totalVigilantes}`;
+        }
+
+        if (!listEl) return;
+        if (!appState.postos.length) {
+          listEl.innerHTML = '<p class="text-xs text-slate-400 text-center py-3">Nenhum posto cadastrado ainda.</p>';
+          return;
+        }
+
+        listEl.innerHTML = appState.postos
+          .map(
+            (p) => `
+            <div class="rounded-2xl bg-[#0A1122] border border-slate-800 p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="font-bold text-sm text-white">${escapeHtml(p.nome)}</span>
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-sky-500/20 text-sky-300">${escapeHtml(p.turno)}</span>
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-500/20 text-indigo-300">${escapeHtml(p.escala)}</span>
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-500/20 text-emerald-300">${Number(p.qtd) || 0} vigilantes</span>
+                </div>
+                <p class="text-xs text-slate-300">${escapeHtml(p.vigilantes || 'Sem nomes listados')}</p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button type="button" data-edit-posto="${escapeHtml(p.id)}" class="px-3 py-1.5 rounded-lg bg-slate-800 text-sky-300 text-xs font-semibold cursor-pointer">
+                  Editar
+                </button>
+                <button type="button" data-del-posto="${escapeHtml(p.id)}" class="px-3 py-1.5 rounded-lg bg-rose-950/60 text-rose-300 text-xs font-semibold cursor-pointer">
+                  Excluir
+                </button>
+              </div>
+            </div>
+          `
+          )
+          .join('');
+      }
+
+      function renderHoristas() {
+        const listEl = document.getElementById('horistas-list');
+        const badgesEl = document.getElementById('horistas-totals-badges');
+        const tot = getHoristasTotals();
+
+        const kpiH = document.getElementById('kpi-horistas-value');
+        const kpiHSub = document.getElementById('kpi-horistas-sub');
+        if (kpiH) kpiH.textContent = String(tot.total);
+        if (kpiHSub) kpiHSub.textContent = `${tot.diurno} Diurno · ${tot.noturno} Noturno`;
+
+        if (badgesEl) {
+          badgesEl.innerHTML = `
+            <span class="px-2.5 py-1 rounded-lg bg-sky-500/15 text-sky-300 border border-sky-500/30">Diurno: ${tot.diurno}</span>
+            <span class="px-2.5 py-1 rounded-lg bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">Noturno: ${tot.noturno}</span>
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Geral: ${tot.total}</span>
+          `;
+        }
+
+        if (!listEl) return;
+        if (!appState.horistas.length) {
+          listEl.innerHTML = '<p class="text-xs text-slate-400 text-center py-3">Nenhum vigilante horista cadastrado.</p>';
+          return;
+        }
+
+        listEl.innerHTML = appState.horistas
+          .map(
+            (h) => `
+            <div class="rounded-2xl bg-[#0A1122] border border-slate-800 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="font-bold text-xs sm:text-sm text-white">${escapeHtml(h.nome)}</span>
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-sky-500/20 text-sky-300">${escapeHtml(h.turno)}</span>
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-purple-500/20 text-purple-300">Qtd: ${Number(h.qtd) || 1}</span>
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                    h.status === 'Disponível'
+                      ? 'bg-emerald-500/20 text-emerald-300'
+                      : 'bg-amber-500/20 text-amber-300'
+                  }">${escapeHtml(h.status)}</span>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-0.5">Contato: ${escapeHtml(h.telefone || 'Não informado')}</p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button type="button" data-edit-horista="${escapeHtml(h.id)}" class="px-3 py-1.5 rounded-lg bg-slate-800 text-sky-300 text-xs font-semibold cursor-pointer">
+                  Editar
+                </button>
+                <button type="button" data-del-horista="${escapeHtml(h.id)}" class="px-3 py-1.5 rounded-lg bg-rose-950/60 text-rose-300 text-xs font-semibold cursor-pointer">
+                  Excluir
+                </button>
+              </div>
+            </div>
+          `
+          )
+          .join('');
+      }
+
+      // ---------------------------------------------------------------------
+      // H. FÉRIAS (ALERTA 10 DIAS ANTES) & RECICLAGEM DE VIGILANTES
+      // ---------------------------------------------------------------------
+      function getUrgentAlertsData() {
+        const alerts = [];
+
+        appState.ferias.forEach((f) => {
+          const daysReturn = diffDaysFromToday(f.retorno);
+          const daysStart = diffDaysFromToday(f.inicio);
+
+          if (daysReturn !== null && daysReturn >= 0 && daysReturn <= 10) {
+            alerts.push({
+              type: 'ferias-retorno',
+              urgent: true,
+              title: `Retorno de Férias em ${daysReturn === 0 ? 'HOJE' : daysReturn + ' dia(s)'}: ${f.nome}`,
+              detail: `Posto: ${f.posto || 'Não informado'} · Retorno ao serviço: ${formatDateBR(f.retorno)} · Substituto: ${f.substituto || '—'}`
+            });
+          } else if (f.situacao === 'Programado' && daysStart !== null && daysStart >= 0 && daysStart <= 10) {
+            alerts.push({
+              type: 'ferias-saida',
+              urgent: true,
+              title: `Saída de Férias em ${daysStart === 0 ? 'HOJE' : daysStart + ' dia(s)'}: ${f.nome}`,
+              detail: `Posto: ${f.posto || 'Não informado'} · Início: ${formatDateBR(f.inicio)} · Substituto: ${f.substituto || '—'}`
+            });
+          }
+        });
+
+        appState.reciclagens.forEach((r) => {
+          const norm = normalizeReciclagemStatus(r.status);
+          const daysEnd = diffDaysFromToday(r.fim);
+          const daysBegin = diffDaysFromToday(r.inicio);
+          if (norm === 'Encerrando' || (daysEnd !== null && daysEnd >= 0 && daysEnd <= 5)) {
+            alerts.push({
+              type: 'reciclagem-fim',
+              urgent: true,
+              title: `Encerramento de Reciclagem: ${r.nome}`,
+              detail: `${r.posto || 'Academia'} · Encerra em ${formatDateBR(r.fim)}${daysEnd !== null ? ' (' + daysEnd + 'd)' : ''}`
+            });
+          } else if (norm === 'Precisa Fazer' && daysBegin !== null && daysBegin >= 0 && daysBegin <= 15) {
+            alerts.push({
+              type: 'reciclagem-inicio',
+              urgent: false,
+              title: `Reciclagem Pendente / Prazo: ${r.nome}`,
+              detail: `${r.posto || 'Academia'} · Início/Prazo: ${formatDateBR(r.inicio)} (${daysBegin}d)`
+            });
+          }
+        });
+
+        return alerts;
+      }
+
+      function renderUrgentAlertsOverview() {
+        const container = document.getElementById('overview-alerts-list');
+        const alerts = getUrgentAlertsData();
+
+        const kpiFerias = document.getElementById('kpi-ferias-value');
+        const kpiFeriasSub = document.getElementById('kpi-ferias-sub');
+        if (kpiFerias) {
+          kpiFerias.textContent = `${appState.ferias.length} / ${appState.reciclagens.length}`;
+        }
+        if (kpiFeriasSub) {
+          kpiFeriasSub.textContent = `${alerts.length} aviso(s) ativo(s) ≤10d`;
+        }
+
+        if (!container) return;
+        if (!alerts.length) {
+          container.innerHTML = '<p class="text-slate-400">Nenhum alerta crítico de férias (≤10 dias) ou reciclagem no momento.</p>';
+          return;
+        }
+
+        container.innerHTML = alerts
+          .map(
+            (a) => `
+            <div class="rounded-xl p-3 bg-amber-950/35 border border-amber-500/35">
+              <div class="font-bold text-amber-300">${escapeHtml(a.title)}</div>
+              <div class="text-[11px] text-slate-300 mt-0.5">${escapeHtml(a.detail)}</div>
+            </div>
+          `
+          )
+          .join('');
+      }
+
+      function renderFerias() {
+        const listEl = document.getElementById('ferias-list');
+        renderUrgentAlertsOverview();
+        if (!listEl) return;
+
+        if (!appState.ferias.length) {
+          listEl.innerHTML = '<p class="text-xs text-slate-400 text-center py-3">Nenhum registro de férias cadastrado.</p>';
+          return;
+        }
+
+        listEl.innerHTML = appState.ferias
+          .map((f) => {
+            const daysRet = diffDaysFromToday(f.retorno);
+            const isAlert10 = daysRet !== null && daysRet >= 0 && daysRet <= 10;
+            const badgeText =
+              daysRet === null
+                ? ''
+                : daysRet < 0
+                ? 'Retornou'
+                : daysRet === 0
+                ? 'RETORNA HOJE!'
+                : `Retorna em ${daysRet} dia(s)${isAlert10 ? ' · ALERTA ≤10D' : ''}`;
+
+            return `
+              <div class="rounded-2xl p-3.5 border ${
+                isAlert10 ? 'bg-amber-950/30 border-amber-500/45' : 'bg-[#0A1122] border-slate-800'
+              } flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div class="space-y-1">
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="font-bold text-sm text-white">${escapeHtml(f.nome)}</span>
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-500/20 text-indigo-300">${escapeHtml(f.situacao)}</span>
+                    ${
+                      badgeText
+                        ? `<span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold ${
+                            isAlert10 ? 'bg-amber-500/25 text-amber-300' : 'bg-slate-800 text-slate-300'
+                          }">${escapeHtml(badgeText)}</span>`
+                        : ''
+                    }
+                  </div>
+                  <p class="text-xs text-slate-300">
+                    Posto: ${escapeHtml(f.posto || '—')} · Saída: <strong>${formatDateBR(f.inicio)}</strong> · Retorno: <strong>${formatDateBR(f.retorno)}</strong>
+                  </p>
+                  <p class="text-[11px] text-slate-400">Substituto: ${escapeHtml(f.substituto || 'Não definido')}</p>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <button type="button" data-edit-ferias="${escapeHtml(f.id)}" class="px-3 py-1.5 rounded-lg bg-slate-800 text-sky-300 text-xs font-semibold cursor-pointer">
+                    Editar
+                  </button>
+                  <button type="button" data-del-ferias="${escapeHtml(f.id)}" class="px-3 py-1.5 rounded-lg bg-rose-950/60 text-rose-300 text-xs font-semibold cursor-pointer">
+                    Excluir
+                  </button>
+                </div>
+              </div>
+            `;
+          })
+          .join('');
+      }
+
+      function renderReciclagens() {
+        const listEl = document.getElementById('reciclagens-list');
+        const badgesEl = document.getElementById('reciclagem-summary-badges');
+        renderUrgentAlertsOverview();
+
+        const needCount = appState.reciclagens.filter((r) => normalizeReciclagemStatus(r.status) === 'Precisa Fazer').length;
+        const activeCount = appState.reciclagens.filter((r) => normalizeReciclagemStatus(r.status) === 'Em Reciclagem').length;
+        const closingCount = appState.reciclagens.filter((r) => normalizeReciclagemStatus(r.status) === 'Encerrando').length;
+
+        if (badgesEl) {
+          badgesEl.innerHTML = `
+            <div class="rounded-xl p-2 bg-amber-950/35 border border-amber-500/30">
+              <div class="text-sm font-extrabold text-amber-300">${needCount}</div>
+              <div class="text-[10px] text-slate-300">Precisam Fazer</div>
+            </div>
+            <div class="rounded-xl p-2 bg-purple-950/40 border border-purple-500/30">
+              <div class="text-sm font-extrabold text-purple-300">${activeCount}</div>
+              <div class="text-[10px] text-slate-300">Em Reciclagem</div>
+            </div>
+            <div class="rounded-xl p-2 bg-emerald-950/35 border border-emerald-500/30">
+              <div class="text-sm font-extrabold text-emerald-300">${closingCount}</div>
+              <div class="text-[10px] text-slate-300">Encerrando</div>
+            </div>
+          `;
+        }
+
+        if (!listEl) return;
+        if (!appState.reciclagens.length) {
+          listEl.innerHTML = '<p class="text-xs text-slate-400 text-center py-3">Nenhuma reciclagem cadastrada.</p>';
+          return;
+        }
+
+        listEl.innerHTML = appState.reciclagens
+          .map((r) => {
+            const norm = normalizeReciclagemStatus(r.status);
+            const isClosing = norm === 'Encerrando';
+            const isActive = norm === 'Em Reciclagem';
+            const badgeCls = isClosing
+              ? 'bg-emerald-500/20 text-emerald-300'
+              : isActive
+              ? 'bg-purple-500/20 text-purple-300'
+              : 'bg-amber-500/20 text-amber-300';
+
+            return `
+              <div class="rounded-2xl p-3.5 border ${
+                isClosing ? 'bg-sky-950/35 border-sky-500/40' : 'bg-[#0A1122] border-slate-800'
+              } flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div class="space-y-1">
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="font-bold text-sm text-white">${escapeHtml(r.nome)}</span>
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${badgeCls}">${escapeHtml(norm)}</span>
+                  </div>
+                  <p class="text-xs text-slate-300">
+                    ${escapeHtml(r.posto || 'Academia')} · Início/Prazo: <strong>${formatDateBR(r.inicio)}</strong> · Encerramento: <strong>${formatDateBR(r.fim)}</strong>
+                  </p>
+                </div>
+                <div class="flex flex-wrap items-center gap-1.5 shrink-0">
+                  <button type="button" data-adv-reciclagem="${escapeHtml(r.id)}" class="px-2.5 py-1.5 rounded-lg bg-indigo-600/25 text-indigo-200 text-xs font-semibold cursor-pointer">
+                    Avançar Etapa
+                  </button>
+                  <button type="button" data-ping-reciclagem="${escapeHtml(r.id)}" class="px-2.5 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 text-xs font-semibold cursor-pointer">
+                    Avisar Agora
+                  </button>
+                  <button type="button" data-edit-reciclagem="${escapeHtml(r.id)}" class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-sky-300 text-xs font-semibold cursor-pointer">
+                    Editar
+                  </button>
+                  <button type="button" data-del-reciclagem="${escapeHtml(r.id)}" class="px-2.5 py-1.5 rounded-lg bg-rose-950/60 text-rose-300 text-xs font-semibold cursor-pointer">
+                    Excluir
+                  </button>
+                </div>
+              </div>
+            `;
+          })
+          .join('');
+      }
+
+      function evaluate10DayAndReciclagemAlerts(speakAloud) {
+        const alerts = getUrgentAlertsData();
+        renderUrgentAlertsOverview();
+        if (!alerts.length) return;
+
+        const todaySig = toLocalISODate(new Date()) + '|' + alerts.map((a) => a.title).join(';');
+        if (appState.last10DayAlertSignature !== todaySig) {
+          appState.last10DayAlertSignature = todaySig;
+          saveState();
+          playAlertSound('urgent');
+          if (speakAloud) {
+            speakWithZenF(`Olá, Roberto. Passando para lembrar com carinho de um aviso importante: ${alerts[0].title}.`);
+          }
+        }
+      }
+
+      // ---------------------------------------------------------------------
+      // I. AGENDA DE ATIVIDADES & ALARMES PROGRAMADOS
+      // ---------------------------------------------------------------------
+      function renderAllTasks() {
+        const overviewEl = document.getElementById('overview-tasks-list');
+        const fullEl = document.getElementById('tasks-full-list');
+
+        const sorted = [...appState.tasks].sort((a, b) =>
+          `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`)
+        );
+
+        if (overviewEl) {
+          const pending = sorted.filter((t) => !t.done).slice(0, 4);
+          overviewEl.innerHTML = pending.length
+            ? pending
+                .map(
+                  (t) => `
+                  <div class="rounded-xl bg-[#0A1122] border border-slate-800 p-2.5 flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                      <div class="font-semibold text-white truncate">${escapeHtml(t.title)}</div>
+                      <div class="text-[11px] text-slate-400">${formatDateBR(t.date)} às ${escapeHtml(t.time)} · Prioridade ${escapeHtml(t.priority)}</div>
+                    </div>
+                    <button type="button" data-toggle-task="${escapeHtml(t.id)}" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 text-[11px] font-bold shrink-0 cursor-pointer">
+                      Concluir
+                    </button>
+                  </div>
+                `
+                )
+                .join('')
+            : '<p class="text-slate-400">Nenhuma tarefa pendente no momento.</p>';
+        }
+
+        if (fullEl) {
+          fullEl.innerHTML = sorted.length
+            ? sorted
+                .map(
+                  (t) => `
+                  <div class="rounded-2xl bg-[#0A1122] border border-slate-800 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 ${
+                    t.done ? 'opacity-60' : ''
+                  }">
+                    <div class="flex items-start gap-2.5">
+                      <input type="checkbox" ${t.done ? 'checked' : ''} data-toggle-task="${escapeHtml(t.id)}" class="mt-1 w-4 h-4 accent-sky-500" />
+                      <div>
+                        <div class="font-bold text-xs sm:text-sm ${t.done ? 'line-through text-slate-400' : 'text-white'}">${escapeHtml(t.title)}</div>
+                        <div class="text-[11px] text-slate-400">${formatDateBR(t.date)} às <strong>${escapeHtml(t.time)}</strong> · ${escapeHtml(t.priority)}</div>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <button type="button" data-edit-task="${escapeHtml(t.id)}" class="px-3 py-1.5 rounded-lg bg-slate-800 text-sky-300 text-xs font-semibold cursor-pointer">
+                        Editar
+                      </button>
+                      <button type="button" data-del-task="${escapeHtml(t.id)}" class="px-3 py-1.5 rounded-lg bg-rose-950/60 text-rose-300 text-xs font-semibold cursor-pointer">
+                        Excluir
+                      </button>
+                    </div>
+                  </div>
+                `
+                )
+                .join('')
+            : '<p class="text-xs text-slate-400 text-center py-3">Nenhuma atividade cadastrada.</p>';
+        }
+      }
+
+      function checkScheduledAlarms() {
+        const now = new Date();
+        const todayISO = toLocalISODate(now);
+        const hhmm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+        let changed = false;
+        appState.tasks.forEach((t) => {
+          if (!t.done && !t.alerted && t.date === todayISO && t.time === hhmm) {
+            t.alerted = true;
+            changed = true;
+            playAlertSound('urgent');
+            speakWithZenF(`Olá, Roberto. Chegou o horário programado para: ${t.title}.`);
+            showToast(`⏰ Alarme ZenF: ${t.title}`);
+          }
+        });
+        if (changed) {
+          saveState();
+        }
+      }
+
+      function speakOperationalBriefing() {
+        const info = getCurrentParityInfo();
+        const tot = getHoristasTotals();
+        const alerts = getUrgentAlertsData();
+        const scaleSegment = info.isOdd
+          ? 'hoje estamos com a escala ímpar ativa'
+          : 'hoje estamos com a escala par ativa, alternando naturalmente com a escala ímpar no calendário';
+        speakWithZenF(
+          `Olá, Roberto. Aqui é a ZenF IA da ZenF Systems, unidade Brasil Sul. ` +
+          `No calendário de hoje, dia ${info.day}, ${scaleSegment}. ` +
+          `Temos ${appState.postos.length} postos cadastrados, ${tot.total} coberturas de horistas e ${alerts.length} avisos no radar de férias e reciclagem.`
+        );
+      }
+
+      // ---------------------------------------------------------------------
+      // J. LOGIN & CONTROLE DE VISIBILIDADE BLINDADO
+      // ---------------------------------------------------------------------
+      let isLoginBusy = false;
+
+      function syncShellVisibility(authenticated) {
+        const loginEl = document.getElementById('login-screen');
+        const appEl = document.getElementById('app-shell');
+
+        if (loginEl) {
+          if (authenticated) {
+            loginEl.classList.add('is-hidden');
+            loginEl.setAttribute('hidden', 'hidden');
+            loginEl.style.display = 'none';
+          } else {
+            loginEl.classList.remove('is-hidden');
+            loginEl.removeAttribute('hidden');
+            loginEl.style.display = 'flex';
+          }
+        }
+
+        if (appEl) {
+          if (authenticated) {
+            appEl.classList.remove('is-hidden');
+            appEl.removeAttribute('hidden');
+            appEl.style.display = 'flex';
+          } else {
+            appEl.classList.add('is-hidden');
+            appEl.setAttribute('hidden', 'hidden');
+            appEl.style.display = 'none';
+          }
+        }
+      }
+
+      function handleLoginSubmit(e) {
+        if (e) {
+          if (typeof e.preventDefault === 'function') e.preventDefault();
+          if (typeof e.stopPropagation === 'function') e.stopPropagation();
+        }
+        if (isLoginBusy) return false;
+        isLoginBusy = true;
+
+        try {
+          const userInput = document.getElementById('login-user');
+          const passInput = document.getElementById('login-pass');
+          const errEl = document.getElementById('login-error');
+
+          let userVal = (userInput?.value ?? '').trim().toLowerCase();
+          if (!userVal) {
+            userVal = 'roberto';
+            if (userInput) userInput.value = 'roberto';
+          }
+
+          if (userVal !== 'roberto') {
+            if (errEl) {
+              errEl.textContent = 'Acesso individual configurado para o supervisor: roberto.';
+              errEl.classList.remove('is-hidden');
+            }
+            return false;
+          }
+
+          if (errEl) errEl.classList.add('is-hidden');
+          if (passInput) passInput.value = '';
+
+          appState.loggedIn = true;
+          saveState();
+          syncShellVisibility(true);
+          unlockAudioSystem(false);
+          enterDashboard(true);
+        } catch (err) {
+          console.error('Recuperando acesso após erro no login:', err);
+          appState.loggedIn = true;
+          syncShellVisibility(true);
+          enterDashboard(false);
+        } finally {
+          setTimeout(() => {
+            isLoginBusy = false;
+          }, 250);
+        }
+        return false;
+      }
+
+      function enterDashboard(greetVoice) {
+        syncShellVisibility(true);
+        populateDaySimulatorSelect();
+
+        const rImpar = document.getElementById('roster-impar-text');
+        const rPar = document.getElementById('roster-par-text');
+        const vRate = document.getElementById('voice-rate');
+        const rateLabel = document.getElementById('rate-val');
+        const contChk = document.getElementById('continuous-voice-toggle');
+        const taskDate = document.getElementById('task-date');
+
+        if (rImpar) rImpar.value = appState.rosterImpar || '';
+        if (rPar) rPar.value = appState.rosterPar || '';
+        if (vRate) vRate.value = appState.voiceRate || 0.95;
+        if (rateLabel) rateLabel.textContent = (appState.voiceRate || 0.95) + 'x';
+        if (contChk) contChk.checked = Boolean(appState.continuousVoice);
+        if (taskDate && !taskDate.value) taskDate.value = toLocalISODate(new Date());
+
+        switchTab(appState.activeTab || 'overview');
+        updateCalendarAndParityUI();
+        renderAllTasks();
+        renderPostos();
+        renderHoristas();
+        renderFerias();
+        renderReciclagens();
+        evaluate10DayAndReciclagemAlerts(false);
+
+        if (greetVoice) {
+          const info = getCurrentParityInfo();
+          setTimeout(() => {
+            speakWithZenF(
+              `Olá, Roberto. Seja muito bem-vindo ao ZenF Agenda, da ZenF Systems, Brasil Sul, na área do supervisor. ` +
+              `Hoje é dia ${info.day}, e estamos operando com a escala ímpar.`
+            );
+          }, 350);
+        }
+      }
+
+      function logoutUser() {
+        appState.loggedIn = false;
+        appState.continuousVoice = false;
+        saveState();
+        try { continuousRecognition?.stop(); } catch (e) {}
+        continuousRecognition = null;
+        syncShellVisibility(false);
+      }
+
+      // ---------------------------------------------------------------------
+      // K. VINCULAÇÃO DE EVENTOS (DELEGAÇÃO SEGURA PARA MOBILE)
+      // ---------------------------------------------------------------------
+      function bindEvents() {
+        const loginForm = document.getElementById('login-form');
+        const loginBtn = document.getElementById('login-submit-btn');
+        const togglePassBtn = document.getElementById('toggle-pass-btn');
+
+        loginForm?.addEventListener('submit', handleLoginSubmit);
+        loginBtn?.addEventListener('click', handleLoginSubmit);
+        togglePassBtn?.addEventListener('click', () => {
+          const p = document.getElementById('login-pass');
+          if (p) p.type = p.type === 'password' ? 'text' : 'password';
+        });
+
+        document.getElementById('logout-btn')?.addEventListener('click', logoutUser);
+        document.getElementById('header-voice-btn')?.addEventListener('click', startSingleVoiceCapture);
+        document.getElementById('overview-speak-btn')?.addEventListener('click', startSingleVoiceCapture);
+        document.getElementById('overview-briefing-btn')?.addEventListener('click', () => {
+          unlockAudioSystem(false);
+          speakOperationalBriefing();
+        });
+        document.getElementById('toast-close-btn')?.addEventListener('click', () => {
+          document.getElementById('toast-banner')?.classList.add('is-hidden');
+        });
+
+        document.getElementById('quick-command-form')?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          unlockAudioSystem(false);
+          const inp = document.getElementById('quick-command-input');
+          if (!inp || !inp.value.trim()) return;
+          const val = inp.value.trim();
+          inp.value = '';
+          processZenFCommand(val);
+        });
+
+        document.querySelectorAll('.tab-btn').forEach((btn) => {
+          btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
+        });
+        document.querySelectorAll('[data-goto-tab]').forEach((btn) => {
+          btn.addEventListener('click', () => switchTab(btn.getAttribute('data-goto-tab')));
+        });
+
+        document.getElementById('day-simulator-select')?.addEventListener('change', (e) => {
+          const val = e.target.value;
+          appState.simulatedDay = val ? Number(val) : null;
+          saveState();
+          updateCalendarAndParityUI();
+        });
+
+        document.getElementById('reset-real-day-btn')?.addEventListener('click', () => {
+          appState.simulatedDay = null;
+          saveState();
+          populateDaySimulatorSelect();
+          updateCalendarAndParityUI();
+          showToast('Sincronizado com o dia real do calendário.');
+        });
+
+        document.getElementById('calendar-31-grid')?.addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-sim-day]');
+          if (!btn) return;
+          appState.simulatedDay = Number(btn.getAttribute('data-sim-day'));
+          saveState();
+          populateDaySimulatorSelect();
+          updateCalendarAndParityUI();
+        });
+
+        document.getElementById('save-rosters-btn')?.addEventListener('click', () => {
+          appState.rosterImpar = document.getElementById('roster-impar-text')?.value || '';
+          appState.rosterPar = document.getElementById('roster-par-text')?.value || '';
+          saveState();
+          playAlertSound('chime');
+          showToast('Escalas ÍMPAR e PAR salvas com sucesso!');
+        });
+
+        // CRUD Postos
+        document.getElementById('posto-form')?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const editId = document.getElementById('posto-edit-id')?.value || '';
+          const nome = (document.getElementById('posto-nome')?.value || '').trim();
+          if (!nome) return;
+
+          const item = {
+            id: editId || generateId('pst'),
+            nome,
+            turno: document.getElementById('posto-turno')?.value || '24h',
+            escala: document.getElementById('posto-escala')?.value || 'Ímpar/Par',
+            qtd: Math.max(1, Number(document.getElementById('posto-qtd')?.value) || 1),
+            vigilantes: (document.getElementById('posto-vigilantes')?.value || '').trim()
+          };
+
+          if (editId) {
+            appState.postos = appState.postos.map((p) => (p.id === editId ? item : p));
+          } else {
+            appState.postos.unshift(item);
+          }
+
+          resetPostoForm();
+          saveState();
+          renderPostos();
+          showToast('Posto de serviço salvo!');
+        });
+
+        document.getElementById('posto-cancel-edit-btn')?.addEventListener('click', resetPostoForm);
+
+        document.getElementById('postos-list')?.addEventListener('click', (e) => {
+          const editBtn = e.target.closest('[data-edit-posto]');
+          const delBtn = e.target.closest('[data-del-posto]');
+          if (editBtn) {
+            const p = appState.postos.find((x) => x.id === editBtn.getAttribute('data-edit-posto'));
+            if (!p) return;
+            document.getElementById('posto-edit-id').value = p.id;
+            document.getElementById('posto-nome').value = p.nome;
+            document.getElementById('posto-turno').value = p.turno;
+            document.getElementById('posto-escala').value = p.escala;
+            document.getElementById('posto-qtd').value = p.qtd;
+            document.getElementById('posto-vigilantes').value = p.vigilantes;
+            document.getElementById('posto-form-title').textContent = 'Editando Posto de Serviço';
+            document.getElementById('posto-cancel-edit-btn')?.classList.remove('is-hidden');
+            document.getElementById('posto-nome')?.focus();
+          } else if (delBtn) {
+            const id = delBtn.getAttribute('data-del-posto');
+            appState.postos = appState.postos.filter((x) => x.id !== id);
+            saveState();
+            renderPostos();
+            showToast('Posto removido.');
+          }
+        });
+
+        // CRUD Horistas
+        document.getElementById('horista-form')?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const editId = document.getElementById('horista-edit-id')?.value || '';
+          const nome = (document.getElementById('horista-nome')?.value || '').trim();
+          if (!nome) return;
+
+          const item = {
+            id: editId || generateId('hor'),
+            nome,
+            turno: document.getElementById('horista-turno')?.value || 'Diurno',
+            qtd: Math.max(1, Number(document.getElementById('horista-qtd')?.value) || 1),
+            status: document.getElementById('horista-status')?.value || 'Disponível',
+            telefone: (document.getElementById('horista-telefone')?.value || '').trim()
+          };
+
+          if (editId) {
+            appState.horistas = appState.horistas.map((h) => (h.id === editId ? item : h));
+          } else {
+            appState.horistas.unshift(item);
+          }
+
+          resetHoristaForm();
+          saveState();
+          renderHoristas();
+          showToast('Vigilante horista salvo!');
+        });
+
+        document.getElementById('horista-cancel-edit-btn')?.addEventListener('click', resetHoristaForm);
+
+        document.getElementById('horistas-list')?.addEventListener('click', (e) => {
+          const editBtn = e.target.closest('[data-edit-horista]');
+          const delBtn = e.target.closest('[data-del-horista]');
+          if (editBtn) {
+            const h = appState.horistas.find((x) => x.id === editBtn.getAttribute('data-edit-horista'));
+            if (!h) return;
+            document.getElementById('horista-edit-id').value = h.id;
+            document.getElementById('horista-nome').value = h.nome;
+            document.getElementById('horista-turno').value = h.turno;
+            document.getElementById('horista-qtd').value = h.qtd;
+            document.getElementById('horista-status').value = h.status;
+            document.getElementById('horista-telefone').value = h.telefone;
+            document.getElementById('horista-form-title').textContent = 'Editando Vigilante Horista';
+            document.getElementById('horista-cancel-edit-btn')?.classList.remove('is-hidden');
+            document.getElementById('horista-nome')?.focus();
+          } else if (delBtn) {
+            const id = delBtn.getAttribute('data-del-horista');
+            appState.horistas = appState.horistas.filter((x) => x.id !== id);
+            saveState();
+            renderHoristas();
+            showToast('Horista removido.');
+          }
+        });
+
+        // CRUD Férias & Teste Alerta 10 Dias
+        document.getElementById('ferias-form')?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const editId = document.getElementById('ferias-edit-id')?.value || '';
+          const nome = (document.getElementById('ferias-nome')?.value || '').trim();
+          const inicio = document.getElementById('ferias-inicio')?.value || '';
+          const retorno = document.getElementById('ferias-retorno')?.value || '';
+          if (!nome || !inicio || !retorno) return;
+
+          const item = {
+            id: editId || generateId('fer'),
+            nome,
+            posto: (document.getElementById('ferias-posto')?.value || '').trim(),
+            situacao: document.getElementById('ferias-situacao')?.value || 'Em Férias',
+            substituto: (document.getElementById('ferias-substituto')?.value || '').trim(),
+            inicio,
+            retorno
+          };
+
+          if (editId) {
+            appState.ferias = appState.ferias.map((f) => (f.id === editId ? item : f));
+          } else {
+            appState.ferias.unshift(item);
+          }
+
+          appState.last10DayAlertSignature = '';
+          resetFeriasForm();
+          saveState();
+          renderFerias();
+          evaluate10DayAndReciclagemAlerts(true);
+          showToast('Registro de férias salvo!');
+        });
+
+        document.getElementById('ferias-cancel-edit-btn')?.addEventListener('click', resetFeriasForm);
+
+        document.getElementById('ferias-list')?.addEventListener('click', (e) => {
+          const editBtn = e.target.closest('[data-edit-ferias]');
+          const delBtn = e.target.closest('[data-del-ferias]');
+          if (editBtn) {
+            const f = appState.ferias.find((x) => x.id === editBtn.getAttribute('data-edit-ferias'));
+            if (!f) return;
+            document.getElementById('ferias-edit-id').value = f.id;
+            document.getElementById('ferias-nome').value = f.nome;
+            document.getElementById('ferias-posto').value = f.posto;
+            document.getElementById('ferias-situacao').value = f.situacao;
+            document.getElementById('ferias-substituto').value = f.substituto;
+            document.getElementById('ferias-inicio').value = f.inicio;
+            document.getElementById('ferias-retorno').value = f.retorno;
+            document.getElementById('ferias-form-title').textContent = 'Editando Férias';
+            document.getElementById('ferias-cancel-edit-btn')?.classList.remove('is-hidden');
+            document.getElementById('ferias-nome')?.focus();
+          } else if (delBtn) {
+            const id = delBtn.getAttribute('data-del-ferias');
+            appState.ferias = appState.ferias.filter((x) => x.id !== id);
+            saveState();
+            renderFerias();
+            showToast('Registro de férias removido.');
+          }
+        });
+
+        function triggerTest10DayNotification() {
+          unlockAudioSystem(false);
+          playAlertSound('urgent');
+          const alerts = getUrgentAlertsData();
+          const msg = alerts.length
+            ? `Olá, Roberto. Aviso de dez dias ativo: ${alerts[0].title}. ${alerts[0].detail}`
+            : 'Olá, Roberto. Teste de aviso sonoro de dez dias antes do retorno de férias concluído com tranquilidade.';
+          speakWithZenF(msg);
+          showToast('🔔 Aviso sonoro de 10 dias acionado!');
+        }
+
+        document.getElementById('test-10day-alert-btn')?.addEventListener('click', triggerTest10DayNotification);
+        document.getElementById('overview-test-alert-btn')?.addEventListener('click', triggerTest10DayNotification);
+
+        // CRUD Reciclagens
+        document.getElementById('reciclagem-form')?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const editId = document.getElementById('reciclagem-edit-id')?.value || '';
+          const nome = (document.getElementById('reciclagem-nome')?.value || '').trim();
+          const inicio = document.getElementById('reciclagem-inicio')?.value || '';
+          const fim = document.getElementById('reciclagem-fim')?.value || '';
+          if (!nome || !inicio || !fim) return;
+
+          const item = {
+            id: editId || generateId('rec'),
+            nome,
+            status: normalizeReciclagemStatus(document.getElementById('reciclagem-status')?.value || 'Precisa Fazer'),
+            posto: (document.getElementById('reciclagem-posto')?.value || '').trim(),
+            inicio,
+            fim
+          };
+
+          if (editId) {
+            appState.reciclagens = appState.reciclagens.map((r) => (r.id === editId ? item : r));
+          } else {
+            appState.reciclagens.unshift(item);
+          }
+
+          resetReciclagemForm();
+          saveState();
+          renderReciclagens();
+          playAlertSound('chime');
+          showToast('Registro de reciclagem salvo!');
+        });
+
+        document.getElementById('reciclagem-cancel-edit-btn')?.addEventListener('click', resetReciclagemForm);
+
+        document.getElementById('test-reciclagem-alert-btn')?.addEventListener('click', () => {
+          unlockAudioSystem(false);
+          playAlertSound('urgent');
+          const rec = appState.reciclagens[0];
+          const msg = rec
+            ? `Olá, Roberto. Lembrando sobre a reciclagem de ${rec.nome}, na etapa ${normalizeReciclagemStatus(rec.status)}.`
+            : 'Olá, Roberto. Teste de aviso sonoro de reciclagem concluído.';
+          speakWithZenF(msg);
+          showToast('🔔 Aviso sonoro de reciclagem acionado!');
+        });
+
+        document.getElementById('reciclagens-list')?.addEventListener('click', (e) => {
+          const advBtn = e.target.closest('[data-adv-reciclagem]');
+          const pingBtn = e.target.closest('[data-ping-reciclagem]');
+          const editBtn = e.target.closest('[data-edit-reciclagem]');
+          const delBtn = e.target.closest('[data-del-reciclagem]');
+
+          if (advBtn) {
+            const id = advBtn.getAttribute('data-adv-reciclagem');
+            appState.reciclagens = appState.reciclagens.map((x) =>
+              x.id === id ? { ...x, status: nextReciclagemStatus(x.status) } : x
+            );
+            saveState();
+            renderReciclagens();
+            playAlertSound('chime');
+            showToast('Etapa da reciclagem atualizada!');
+          } else if (pingBtn) {
+            const r = appState.reciclagens.find((x) => x.id === pingBtn.getAttribute('data-ping-reciclagem'));
+            if (!r) return;
+            unlockAudioSystem(false);
+            playAlertSound('urgent');
+            speakWithZenF(`Olá, Roberto. Aviso sobre a reciclagem de ${r.nome}: etapa ${normalizeReciclagemStatus(r.status)}, encerramento em ${formatDateBR(r.fim)}.`);
+            showToast(`Aviso enviado para ${r.nome}`);
+          } else if (editBtn) {
+            const r = appState.reciclagens.find((x) => x.id === editBtn.getAttribute('data-edit-reciclagem'));
+            if (!r) return;
+            document.getElementById('reciclagem-edit-id').value = r.id;
+            document.getElementById('reciclagem-nome').value = r.nome;
+            document.getElementById('reciclagem-status').value = normalizeReciclagemStatus(r.status);
+            document.getElementById('reciclagem-posto').value = r.posto;
+            document.getElementById('reciclagem-inicio').value = r.inicio;
+            document.getElementById('reciclagem-fim').value = r.fim;
+            document.getElementById('reciclagem-form-title').textContent = 'Editando Reciclagem';
+            document.getElementById('reciclagem-cancel-edit-btn')?.classList.remove('is-hidden');
+            document.getElementById('reciclagem-nome')?.focus();
+          } else if (delBtn) {
+            const id = delBtn.getAttribute('data-del-reciclagem');
+            appState.reciclagens = appState.reciclagens.filter((x) => x.id !== id);
+            saveState();
+            renderReciclagens();
+            showToast('Reciclagem removida.');
+          }
+        });
+
+        // CRUD Tarefas da Agenda
+        document.getElementById('task-form')?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          unlockAudioSystem(false);
+          const editId = document.getElementById('task-edit-id')?.value || '';
+          const title = (document.getElementById('task-title')?.value || '').trim();
+          const date = document.getElementById('task-date')?.value || toLocalISODate(new Date());
+          const time = document.getElementById('task-time')?.value || '12:00';
+          if (!title) return;
+
+          const item = {
+            id: editId || generateId('tsk'),
+            title,
+            date,
+            time,
+            priority: document.getElementById('task-priority')?.value || 'Normal',
+            done: false,
+            alerted: false
+          };
+
+          if (editId) {
+            appState.tasks = appState.tasks.map((t) => (t.id === editId ? item : t));
+          } else {
+            appState.tasks.unshift(item);
+          }
+
+          resetTaskForm();
+          saveState();
+          renderAllTasks();
+          playAlertSound('chime');
+          showToast('Atividade agendada com alerta sonoro!');
+        });
+
+        document.getElementById('task-cancel-edit-btn')?.addEventListener('click', resetTaskForm);
+
+        function handleTaskListClick(e) {
+          const toggleEl = e.target.closest('[data-toggle-task]');
+          const editBtn = e.target.closest('[data-edit-task]');
+          const delBtn = e.target.closest('[data-del-task]');
+
+          if (toggleEl) {
+            const id = toggleEl.getAttribute('data-toggle-task');
+            appState.tasks = appState.tasks.map((t) => (t.id === id ? { ...t, done: !t.done } : t));
+            saveState();
+            renderAllTasks();
+          } else if (editBtn) {
+            const t = appState.tasks.find((x) => x.id === editBtn.getAttribute('data-edit-task'));
+            if (!t) return;
+            document.getElementById('task-edit-id').value = t.id;
+            document.getElementById('task-title').value = t.title;
+            document.getElementById('task-date').value = t.date;
+            document.getElementById('task-time').value = t.time;
+            document.getElementById('task-priority').value = t.priority;
+            document.getElementById('task-form-title').textContent = 'Editando Atividade';
+            document.getElementById('task-cancel-edit-btn')?.classList.remove('is-hidden');
+            document.getElementById('task-title')?.focus();
+          } else if (delBtn) {
+            const id = delBtn.getAttribute('data-del-task');
+            appState.tasks = appState.tasks.filter((x) => x.id !== id);
+            saveState();
+            renderAllTasks();
+            showToast('Atividade excluída.');
+          }
+        }
+
+        document.getElementById('tasks-full-list')?.addEventListener('click', handleTaskListClick);
+        document.getElementById('overview-tasks-list')?.addEventListener('click', handleTaskListClick);
+
+        // Voz & Backup JSON
+        document.getElementById('voice-select')?.addEventListener('change', (e) => {
+          appState.voiceName = e.target.value;
+          saveState();
+        });
+
+        document.getElementById('voice-rate')?.addEventListener('input', (e) => {
+          appState.voiceRate = Number(e.target.value) || 0.95;
+          const lbl = document.getElementById('rate-val');
+          if (lbl) lbl.textContent = appState.voiceRate + 'x';
+          saveState();
+        });
+
+        document.getElementById('continuous-voice-toggle')?.addEventListener('change', (e) => {
+          unlockAudioSystem(false);
+          toggleContinuousVoice(e.target.checked);
+        });
+
+        document.getElementById('test-voice-sound-btn')?.addEventListener('click', () => {
+          unlockAudioSystem(true);
+          speakWithZenF(
+            'Olá, Roberto. Apresentação do sistema ZenF Agenda, da ZenF Systems, Brasil Sul. ' +
+            'Estou com voz feminina cordial e profissional, operando com a escala ímpar.'
+          );
+        });
+
+        document.getElementById('export-backup-btn')?.addEventListener('click', () => {
+          try {
+            const blob = new Blob([JSON.stringify(appState, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `zenf-agenda-backup-${toLocalISODate(new Date())}.json`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            showToast('Backup .JSON exportado com sucesso!');
+          } catch (e) {
+            showToast('Não foi possível baixar o arquivo neste navegador.');
+          }
+        });
+
+        document.getElementById('import-backup-input')?.addEventListener('change', (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            try {
+              const imported = JSON.parse(String(reader.result || '{}'));
+              appState = { ...createDefaultState(), ...imported, loggedIn: true };
+              saveState();
+              enterDashboard(false);
+              showToast('Backup restaurado com sucesso!');
+            } catch (err) {
+              showToast('Arquivo JSON inválido.');
+            }
+          };
+          reader.readAsText(file);
+          e.target.value = '';
+        });
+
+        document.getElementById('reset-defaults-btn')?.addEventListener('click', () => {
+          appState = { ...createDefaultState(), loggedIn: true };
+          saveState();
+          enterDashboard(false);
+          showToast('Dados padrão de teste restaurados.');
+        });
+      }
+
+      function resetPostoForm() {
+        document.getElementById('posto-edit-id').value = '';
+        document.getElementById('posto-nome').value = '';
+        document.getElementById('posto-turno').value = '24h';
+        document.getElementById('posto-escala').value = 'Ímpar/Par';
+        document.getElementById('posto-qtd').value = '2';
+        document.getElementById('posto-vigilantes').value = '';
+        document.getElementById('posto-form-title').textContent = 'Cadastrar Posto de Serviço';
+        document.getElementById('posto-cancel-edit-btn')?.classList.add('is-hidden');
+      }
+
+      function resetHoristaForm() {
+        document.getElementById('horista-edit-id').value = '';
+        document.getElementById('horista-nome').value = '';
+        document.getElementById('horista-turno').value = 'Diurno';
+        document.getElementById('horista-qtd').value = '1';
+        document.getElementById('horista-status').value = 'Disponível';
+        document.getElementById('horista-telefone').value = '';
+        document.getElementById('horista-form-title').textContent = 'Vigilantes Horistas (Diurno / Noturno)';
+        document.getElementById('horista-cancel-edit-btn')?.classList.add('is-hidden');
+      }
+
+      function resetFeriasForm() {
+        document.getElementById('ferias-edit-id').value = '';
+        document.getElementById('ferias-nome').value = '';
+        document.getElementById('ferias-posto').value = '';
+        document.getElementById('ferias-situacao').value = 'Em Férias';
+        document.getElementById('ferias-substituto').value = '';
+        document.getElementById('ferias-inicio').value = '';
+        document.getElementById('ferias-retorno').value = '';
+        document.getElementById('ferias-form-title').textContent = 'Férias de Vigilantes · Alerta 10 Dias Antes';
+        document.getElementById('ferias-cancel-edit-btn')?.classList.add('is-hidden');
+      }
+
+      function resetReciclagemForm() {
+        document.getElementById('reciclagem-edit-id').value = '';
+        document.getElementById('reciclagem-nome').value = '';
+        document.getElementById('reciclagem-status').value = 'Precisa Fazer';
+        document.getElementById('reciclagem-posto').value = '';
+        document.getElementById('reciclagem-inicio').value = '';
+        document.getElementById('reciclagem-fim').value = '';
+        document.getElementById('reciclagem-form-title').textContent = 'Reciclagem do Curso de Vigilante';
+        document.getElementById('reciclagem-cancel-edit-btn')?.classList.add('is-hidden');
+      }
+
+      function resetTaskForm() {
+        document.getElementById('task-edit-id').value = '';
+        document.getElementById('task-title').value = '';
+        document.getElementById('task-date').value = toLocalISODate(new Date());
+        document.getElementById('task-time').value = '';
+        document.getElementById('task-priority').value = 'Normal';
+        document.getElementById('task-form-title').textContent = 'Agenda Operacional & Avisos Programados';
+        document.getElementById('task-cancel-edit-btn')?.classList.add('is-hidden');
+      }
+
+      // ---------------------------------------------------------------------
+      // L. INICIALIZAÇÃO IDEMPOTENTE E SEGURA (READYSTATE + DOMCONTENTLOADED)
+      // ---------------------------------------------------------------------
+      function bootZenFApp() {
+        if (window.__ZENF_BOOT_OK) return;
+        try {
+          populateFemaleVoices();
+          bindEvents();
+
+          const isAuthenticated = Boolean(appState && appState.loggedIn);
+          syncShellVisibility(isAuthenticated);
+          if (isAuthenticated) {
+            enterDashboard(false);
+          }
+
+          if (!window.__zenfMainTimer) {
+            window.__zenfMainTimer = setInterval(() => {
+              try {
+                if (appState && appState.loggedIn) {
+                  updateCalendarAndParityUI();
+                  checkScheduledAlarms();
+                }
+              } catch (e) {}
+            }, 1000);
+          }
+
+          window.__ZENF_BOOT_OK = true;
+        } catch (err) {
+          console.error('Erro no boot ZenF:', err);
+          syncShellVisibility(false);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootZenFApp);
+      } else {
+        bootZenFApp();
+      }
+    })();
+  </script>
+</body>
+</html>
